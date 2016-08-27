@@ -3,7 +3,6 @@
  */
 (function(){
     var outputDisplayToggle = (function(){
-        console.log('output initting');
         var displayState = false;
         return function(){
             var output_span = document.getElementById('output');
@@ -20,19 +19,20 @@
         };
     })();
     var offerClick = function(){
-        alert('OMG, a Special OFFER!');
+        // create and dispatch the event
+        var event = new CustomEvent( 'vendri_play_an_ad' );
+        window.dispatchEvent( event );
     };
 
     function application(){
         var offer = document.getElementsByClassName('offer');
-        console.log( offer );
         //document.addEventListener('click',  outputDisplayToggle, false );
         //document.addEventListener('touchstart',  outputDisplayToggle, false );
+
         for( var i = 0; i < offer.length; i += 1 ){
             offer[ 0 ].addEventListener( 'click',  offerClick, false );
             offer[ 0 ].addEventListener( 'touchstart',  offerClick, false );
         }
-
     }
 
     var document_ready = setInterval(function () {
