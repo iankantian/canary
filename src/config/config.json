@@ -1,0 +1,127 @@
+{
+  "width": 640,
+  "height": 480,
+  "dti": 10,
+  "pti": 10,
+  "volume": 0,
+  "debug": false,
+  "theme": "dark",
+  "adSkip": {
+    "enabled": true,
+    "duration": 2,
+    "textBefore": "Youmayskipin{duration}",
+    "textAfter": "Skip",
+    "sync": true
+  },
+  "constraints": {
+    "playTime": true,
+    "startTime": 3
+  },
+  "platforms": [
+    {
+      "PFID": 100,
+      "target": "*",
+      "appId": false,
+      "type": "web",
+      "setup": {},
+      "enabled": true,
+      "PLIDs": [
+        1
+      ],
+      "name": "test_1",
+      "id": "test1"
+    },
+    {
+      "PFID": 200,
+      "target": "#vendri_play_modal",
+      "appId": false,
+      "type": "web",
+      "setup": {},
+      "enabled": true,
+      "PLIDs": [
+        2
+      ],
+      "name": "hash_play_modal",
+      "id": "test2"
+    }
+  ],
+  "placements": [
+    {
+      "PLID": 1,
+      "PFID": 100,
+      "target": "vendri_div",
+      "type": "element",
+      "setup": {},
+      "enabled": true,
+      "CPIDs": [
+        1
+      ],
+      "name": "vendri_div_1",
+      "id": "test1"
+    },
+    {
+      "PLID": 2,
+      "PFID": 200,
+      "target": false,
+      "type": "modal",
+      "setup": {},
+      "enabled": true,
+      "CPIDs": [
+        2
+      ],
+      "name": "vendrimodal",
+      "id": "test2"
+    }
+  ],
+  "campaigns": [
+    {
+      "CPID": 1,
+      "start": 1442901690805,
+      "end": 0,
+      "type": "ad",
+      "setup": {},
+      "enabled": true,
+      "name": "campaigntest_1",
+      "id": "test_campaign_1",
+      "creatives": [
+        {
+          "CRID": 1,
+          "resource": "http://vendri.com/test/assets/myvastvideoad.xml",
+          "type": "vast",
+          "setup": {},
+          "enabled": true,
+          "name": "myvastvideoad",
+          "id": "test_myvastvideoad"
+        }
+      ]
+    }
+  ],
+  "creatives": [
+    {
+      "CRID": 1,
+      "resource": "http://vendri.com/test/assets/myvastvideoad.xml",
+      "type": "vast",
+      "setup": {},
+      "enabled": true,
+      "name": "myvastvideoad",
+      "id": "test_myvastvideoad"
+    }
+  ],
+  "triggers": [
+    {
+      "TRID": 1,
+      "PLIDs": [
+        1,
+        2
+      ],
+      "action": "play",
+      "method": "event",
+      "delay": 0,
+      "maxRuns": 0,
+      "event": {
+        "name": "vendri_play_an_ad",
+        "target": "window"
+      }
+    }
+  ]
+}
