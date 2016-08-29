@@ -23,7 +23,16 @@
         var event = new CustomEvent( 'vendri_play_an_ad' );
         window.dispatchEvent( event );
     };
-
+    var adFinished = function(){
+        var obfuscators = document.getElementsByClassName('obfuscated');
+        var offers = document.getElementsByClassName('offer');
+        for( var i = 0; i < offers.length; i += 1 ){
+            offers[ i ].parentNode.removeChild( offers[ i ] );
+        }
+        for( var j = 0; j < obfuscators.length; j += 1 ){
+            obfuscators[ j ].parentNode.removeChild( obfuscators[ j ] );
+        }
+    };
     function application(){
         var offer = document.getElementsByClassName('offer');
         //document.addEventListener('click',  outputDisplayToggle, false );
@@ -33,6 +42,7 @@
             offer[ 0 ].addEventListener( 'click',  offerClick, false );
             offer[ 0 ].addEventListener( 'touchstart',  offerClick, false );
         }
+        window.addEventListener('adFinished', adFinished, false );
     }
 
     var document_ready = setInterval(function () {

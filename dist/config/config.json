@@ -30,44 +30,18 @@
       ],
       "name": "test_1",
       "id": "test1"
-    },
-    {
-      "PFID": 200,
-      "target": "#vendri_play_modal",
-      "appId": false,
-      "type": "web",
-      "setup": {},
-      "enabled": true,
-      "PLIDs": [
-        2
-      ],
-      "name": "hash_play_modal",
-      "id": "test2"
     }
   ],
   "placements": [
     {
       "PLID": 1,
       "PFID": 100,
-      "target": "vendri_div",
-      "type": "element",
-      "setup": {},
-      "enabled": true,
-      "CPIDs": [
-        1
-      ],
-      "name": "vendri_div_1",
-      "id": "test1"
-    },
-    {
-      "PLID": 2,
-      "PFID": 200,
       "target": false,
       "type": "modal",
       "setup": {},
       "enabled": true,
       "CPIDs": [
-        2
+        1
       ],
       "name": "vendrimodal",
       "id": "test2"
@@ -111,14 +85,13 @@
     {
       "TRID": 1,
       "PLIDs": [
-        1,
-        2
+        1
       ],
       "action": "play",
       "method": "event",
       "delay": 0,
       "maxRuns": 0,
-      "tevent": {
+      "event": {
         "name": "vendri_play_an_ad",
         "target": "window"
       }

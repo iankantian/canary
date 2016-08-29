@@ -57,6 +57,7 @@ html {
     border-radius: 5px;
 }
 .obfuscated {
+    display: inline;
     position: absolute;
     width: 100%;
     height: 80%;
@@ -64,7 +65,11 @@ html {
     left: 0;
     background: linear-gradient( to bottom, rgba( 255,255,255,0 ), rgba( 255,255,255,1 ), rgba( 255,255,255,1 ), rgba( 255,255,255,1 ), rgba( 255,255,255,1 ), rgba( 255,255,255,1 ), rgba( 255,255,255,1 ) ); /*Standard*/
 }
+.invisible {
+    display: none;
+}
 .offer {
+    display: inline;
     position: absolute;
     border-radius: 5px;
     padding: 15px;
