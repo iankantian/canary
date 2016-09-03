@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SVG Test</title>
+    <title>SVG Test 2</title>
     <style>
         .myIcon_control {
             /*background-color: red;*/
@@ -144,6 +144,48 @@
                 }
             }
         }
+
+        .controls {
+            width: 100%;
+            height: 35px;
+            background-color: black;
+        }
+        .progress {
+            width: 50%;
+            height: 100%;
+            background-color: dimgray;
+        }
+        .progressBackground {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 30%;
+            /*background-color: #ccc;*/
+            /*border-radius: 3px;*/
+            /*margin: 0 auto;*/
+            /*max-width: 700px;*/
+            border-radius: 100px;
+            border:1px;
+            border-color: white;
+            border-style: solid;
+            /*width:95%;*/
+            padding: 2px;
+            background-color: dimgray;
+        }
+        .playing {
+            border-radius: 100px;
+            border:none;
+            height:100%;
+            width:66%;
+            background-color: white;
+        }
+        .loading {
+            border-radius: 100px;
+            border:none;
+            height:100%;
+            width:80%;
+            background-color: darkgray;
+        }
     </style>
 </head>
 <body style="">
@@ -195,6 +237,15 @@
     <!--<svg id="myIcon_close" class="myIcon_control myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
     <!--<polygon points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/>-->
     <!--</svg>-->
+</div>
+<div class="controls">
+    <div class="progress">
+        <div class="progressBackground">
+            <div class="loading">
+                <div class="playing"></div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     var output = document.getElementById('myIcon_clock').childNodes[1];
