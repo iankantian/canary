@@ -5,7 +5,7 @@
     <title>SVG Test</title>
     <style>
         .myIcon_control {
-            background-color: orange;
+            /*background-color: red;*/
             padding: 4px;
             width: 40px;
             height: 40px;
@@ -28,12 +28,12 @@
         }
         .myIcon_progress_control {
             padding: 4px 12px 4px 12px;
-            height: 40px;
-            width: 50%;
+            width:50%;
+            vertical-align: top;
         }
         .myIcon_progress_control > line {
             stroke-linecap:round;
-            stroke-width:18px;
+            stroke-width:20px;
         }
         #myIcon_controls {
             position: relative;
@@ -61,20 +61,79 @@
             width:200px;
             font-size: 15px;
         }
-        @media ( min-width: 1200px ) {
+        /*smart phones in portrait*/
+        @media ( min-height: 1000px ){
             .myIcon_control{
-                width: 20px;
-                height: 20px;
-            }
-            .myIcon_progress_control {
-                position: relative;
-                height: 20px;
-                width: 60%;
+                /*background-color: green;*/
+                width: 80px;
+                height: 80px;
             }
             #myIcon_clock{
-                font-size: 20px;
-                width:120px;
+                font-size: 15px;
+                width:300px;
             }
+            #myIcon_volume_setting{
+                width: 180px;
+                cursor: col-resize;
+            }
+            .myIcon_progress_control {  width: 25%;  }
+            .myIcon_progress_control > line {
+                stroke-width: 80px;
+            }
+        }
+            /*for devices wider than smart-phones: we go with the small icons*/
+        @media ( min-device-width: 1200px ) {
+            .myIcon_control{
+                /*background-color: orange;*/
+                width: 15px;
+                height: 15px;
+            }
+            #myIcon_clock{
+                font-size: 15px;
+                width:90px;
+            }
+            @media ( min-width: 320px ){
+                .myIcon_progress_control {  display:none;  }
+                #myIcon_volume_setting{ width: 90px; }
+            @media ( min-width: 480px ){
+                .myIcon_progress_control {
+                    width: 35%;
+                    display: inline;
+                }
+                .myIcon_progress_control > line {
+                    stroke-width: 30px;
+                }
+            }
+            @media ( min-width: 640px ){
+                .myIcon_progress_control {  width: 52%;  }
+                .myIcon_progress_control > line {
+                    stroke-width: 20px;
+                }
+            }
+            @media ( min-width: 800px ){
+                .myIcon_progress_control {  width: 63%;  }
+                .myIcon_progress_control > line {
+                    stroke-width: 15px;
+                }
+            @media ( min-width: 960px ){
+                .myIcon_progress_control {  width: 68%;  }
+                .myIcon_progress_control > line {
+                    stroke-width: 11px;
+                }
+            }
+            @media ( min-width: 1120px ){
+                .myIcon_progress_control {  width: 73%;  }
+                .myIcon_progress_control > line {
+                    stroke-width: 8px;
+                }
+            }
+            @media ( min-width: 1280px ){
+                .myIcon_progress_control {  width: 76%;  }
+                .myIcon_progress_control > line {
+                    stroke-width: 6px;
+                }
+            }
+
         }
     </style>
 </head>
@@ -100,13 +159,13 @@ Put it all together now!
         <path d="M19 3 L19 28 L31 28 L31 3 Z" />
     </svg>
 
-    <svg class="myIcon_progress_control myIcon_control progressBar" viewBox="0 0 1000 24" xmlns="http://www.w3.org/2000/svg">
-        <line class="myIcon_inactive_control_2" x1="0" y1="12" x2="100%" y2="12" />
-        <line class="myIcon_inactive_control" x1="0" y1="12" x2="50%" y2="12" />
-        <line class="myIcon_active_control" x1="0" y1="12" x2="20%" y2="12" />
+    <svg class="myIcon_progress_control myIcon_control" viewBox="0 -5 1000 5" xmlns="http://www.w3.org/2000/svg">
+        <line class="myIcon_inactive_control_2" x1="0" y1="0" x2="100%" y2="0" />
+        <line class="myIcon_inactive_control" x1="0" y1="0" x2="50%" y2="0" />
+        <line class="myIcon_active_control" x1="0" y1="0" x2="20%" y2="0" />
     </svg>
 
-    <svg id="myIcon_clock" class="myIcon_control myIcon_active_control" viewBox="0 -10 110 10">
+    <svg id="myIcon_clock" class="myIcon_control myIcon_active_control" viewBox="0 -10 85 10">
         <text x="0" y="0">00:00/00:00</text>
     </svg>
 
@@ -138,10 +197,13 @@ Put it all together now!
     var output = document.getElementById('myIcon_clock').childNodes[1];
     var controls = document.getElementById('myIcon_controls');
     function outputWidth( event ){
-        output.innerHTML = controls.offsetWidth.toString();
+        output.innerHTML = window.innerWidth.toString();
+        output.innerHTML += ', ';
+        output.innerHTML += window.innerHeight.toString();
     }
     controls.addEventListener( 'touchStart', outputWidth, false);
     controls.addEventListener( 'click', outputWidth, false);
+    window.addEventListener( 'resize', outputWidth, false);
 </script>
 </body>
 </html>
