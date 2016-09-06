@@ -4,175 +4,64 @@
     <meta charset="UTF-8">
     <title>SVG Test 2</title>
     <style>
-        .myIcon_control {
-            /*background-color: red;*/
-            padding: 4px;
-            width: 40px;
-            height: 40px;
+        body{
+            background-color: darkolivegreen;
+            color: white;
         }
-        .myIcon_active_control {
+        table, tbody, tr, td {margin:0; padding: 4px; border:0; border-spacing:0;}
+        svg{
+            display: block;
+        }
+        .controls {
+            position: absolute;
+            bottom: 0;
+            color: white;
+            fill: white;
+            width: 100%;
+            height: 30px;
+            background-color: rgba(9,22,24,0.8);
+        }
+        .myIcon_active_control{
             fill: white;
             stop-color: white;
             stroke: white;
             stroke-width:0;
         }
-        .myIcon_inactive_control {
+        .myIcon_inactive_control{
             fill: darkgray;
             stop-color: darkgray;
             stroke: darkgray;
             stroke-width:0;
         }
-        .myIcon_inactive_control_2 {
-            stroke: #646464;
-            stroke-width:0;
-        }
-        .myIcon_progress_control {
-            padding: 4px 12px 4px 12px;
-            width:50%;
-            vertical-align: top;
-            overflow: visible;
-        }
-        .myIcon_progress_control > line {
-            stroke-linecap:round;
-            stroke-width:20px;
-        }
-        #myIcon_controls {
-            position: relative;
-            font-family: sans-serif;
-            background: rgba(0, 0, 0, 0.5);
-            background-size: 100%;
-            padding: 4px;
-        }
-        #myIcon_close{
-            right: 4px;
-        }
-        #myIcon_muted{
-        }
-        #myIcon_volume_setting{
-            width: 120px;
-            cursor: col-resize;
-        }
-        #myIcon_volume{
-        }
-        #myIcon_play{
-        }
-        #myIcon_pause{
-        }
-        #myIcon_clock{
-            width:200px;
-            font-size: 15px;
-        }
-        /*smart phones in portrait*/
-        @media ( min-height: 1000px ){
-            .myIcon_control{
-                /*background-color: green;*/
-                width: 80px;
-                height: 80px;
-            }
-            #myIcon_clock{
-                font-size: 15px;
-                width:300px;
-            }
-            #myIcon_volume_setting{
-                width: 180px;
-                cursor: col-resize;
-            }
-            .myIcon_progress_control {  width: 25%;  }
-            .myIcon_progress_control > line {
-                stroke-width: 240px;
-            }
-        }
-            /*for devices wider than smart-phones: we go with the small icons*/
-        @media ( min-device-width: 1200px ) {
-            .myIcon_control{
-                /*background-color: orange;*/
-                width: 15px;
-                height: 15px;
-            }
-            #myIcon_clock{
-                font-size: 15px;
-                width:90px;
-            }
-            @media ( min-width: 320px ) {
-                .myIcon_progress_control {
-                    display: none;
-                }
-                #myIcon_volume_setting {
-                    width: 90px;
-                }
-            }
-            @media ( min-width: 480px ){
-                .myIcon_progress_control {
-                    width: 35%;
-                    display: inline;
-                    padding: 4px 20px 4px 20px;
-                }
-                .myIcon_progress_control > line {
-                    stroke-width: 120px;
-                }
-            }
-            @media ( min-width: 640px ){
-                .myIcon_progress_control {  width: 52%;  }
-                .myIcon_progress_control > line {
-                    stroke-width: 80px;
-                }
-            }
-            @media ( min-width: 800px ) {
-                .myIcon_progress_control {
-                    width: 61%;
-                }
-                .myIcon_progress_control > line {
-                    stroke-width: 60px;
-                }
-            }
-            @media ( min-width: 960px ){
-                .myIcon_progress_control {  width: 68%;  }
-                .myIcon_progress_control > line {
-                    stroke-width: 44px;
-                }
-            }
-            @media ( min-width: 1120px ){
-                .myIcon_progress_control {  width: 72%;  }
-                .myIcon_progress_control > line {
-                    stroke-width: 32px;
-                }
-            }
-            @media ( min-width: 1280px ){
-                .myIcon_progress_control {  width: 76%;  }
-                .myIcon_progress_control > line {
-                    stroke-width: 24px;
-                }
-            }
-        }
-
-        .controls {
-            width: 100%;
-            height: 35px;
-            background-color: black;
-        }
         .progress {
-            width: 50%;
             height: 100%;
-            background-color: dimgray;
+            min-width: 50px;
+        }
+        .clock {
+            min-width: 40px;
+            width: 90px;
+        }
+        .play_pause, .muted, .mute, .fullscreen{
+            width: 20px;
+            min-width: 12px;
+        }
+        .volume {
+            width: 80px;
+            min-width: 40px;
+            /*min-width: 40px;*/
+            /*height: 20px;*/
+            /*background-color: blue;*/
         }
         .progressBackground {
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 30%;
-            /*background-color: #ccc;*/
-            /*border-radius: 3px;*/
-            /*margin: 0 auto;*/
-            /*max-width: 700px;*/
+            height: 40%;
             border-radius: 100px;
-            border:1px;
-            border-color: white;
-            border-style: solid;
-            /*width:95%;*/
-            padding: 2px;
+            border:1px solid white;
+            padding: 1px;
             background-color: dimgray;
         }
         .playing {
+            position:relative;
+            top:-100%;
             border-radius: 100px;
             border:none;
             height:100%;
@@ -183,70 +72,104 @@
             border-radius: 100px;
             border:none;
             height:100%;
-            width:80%;
+            width:75%;
             background-color: darkgray;
+        }
+        .vid{
+            position: relative;
+            width:100%;
+            height: 360px;
+            background-image: url("media/bunny_poster.jpg");
+            background-color: black;
         }
     </style>
 </head>
-<body style="">
+<body>
 <p>
-    SVG media control bar demo, alas this only works as written if the toolbar is as wide as the device!  The mobile side <br>
-    might be OK but in desktop this will break down in short order.  In desktop, when in a div, this will need to <br>
-    query the div for it's size.  That's where javascript can come in and help.
+Technically it's a hack.  It uses a table as a layout tool.  Table is the only mechanism I could find, without massive
+    media query trees, in which you can have elements of fixed and fluid widths mixed together.<br>
+    The status of volume control is edited by #volumestate.childnode[0] and [1] = % of volume.<br>
+    The status of progress bar is changed by updating the width percentages of playing and loading.<br>
+    Resizing is more of a chore than I'd like.  The dynamic and varied nature of table renderings between browsers means
+    I couldn't make it just be editing the height of the controls.  However, just scaling up the size of elements:
+    <ul>
+    <li>play</li>
+    <li>clock</li>
+    <li>mute</li>
+    <li>fullscreen</li>
+    <li>volume position</li>
+    </ul>
+will do the job, and that can be decided via @media queries, so that's no-code.<br>
+We can then remove positionController, all my obtuse fulldivOn, fullscreenOn, fullscreenOff, styleStash, and the DOM
+modification code with the 'on-resize' listener.  This code removal extends to the 'media' type of asset as well.  VPAID
+and FLASH type ads provide their own interfaces, in theory.
 </p>
-<div id="myIcon_controls">
-    <!--<svg id="myIcon_play" class="myIcon_control myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
-    <!--<path d="M0 3 L15.5 15.5 L0 28 L15.5 28 L31 15.5 L15.5 3 Z" />-->
-    <!--</svg>-->
-    <svg id="myIcon_pause" class="myIcon_control myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 3 L0 28 L12 28 L12 3 Z" />
-        <path d="M19 3 L19 28 L31 28 L31 3 Z" />
-    </svg>
-
-    <svg class="myIcon_progress_control myIcon_control" viewBox="0 -5 4000 5" xmlns="http://www.w3.org/2000/svg">
-        <line class="myIcon_inactive_control_2" x1="0" y1="0" x2="100%" y2="0"/>
-        <line class="myIcon_inactive_control" x1="0" y1="0" x2="50%" y2="0" />
-        <line class="myIcon_active_control" x1="0" y1="0" x2="20%" y2="0" />
-    </svg>
-
-    <svg id="myIcon_clock" class="myIcon_control myIcon_active_control" viewBox="0 -10 85 10">
-        <text x="0" y="0">00:00/00:00</text>
-    </svg>
-
-    <svg id="myIcon_volume" class="myIcon_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
-        <polygon class="myIcon_active_control" points="0,9 0,22 9,22 18,31 18,0 9,9"/>
-        <path class="myIcon_active_control" d="M23 8 A11 11 0 0 1 23 23 L26 26 A15.24 15.24 0 0 0 26 5 Z">
-        </path>
-    </svg>
-    <!--<svg id="myIcon_muted" class="myIcon_control myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
-        <!--&lt;!&ndash;the left speaker center&ndash;&gt;-->
-        <!--<polygon class="myIcon_inactive_control" points="5,9 5,22 14,22 23,31 23,0 14,9"/>-->
-        <!--&lt;!&ndash;the X&ndash;&gt;-->
-        <!--<polygon class="myIcon_active_control" points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/>-->
-    <!--</svg>-->
-
-    <svg id="myIcon_volume_setting" class="myIcon_control myIcon_active_control" viewBox="0 0 31 31" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <linearGradient id="volumeState">
-                <stop class="myIcon_active_control" offset="66%"/>
-                <stop class="myIcon_inactive_control" offset="66%"/>
-            </linearGradient>
-        </defs>
-        <polygon points="31,0 31,31 0,15.5" fill="url(#volumeState)"/>
-    </svg>
-    <!--<svg id="myIcon_close" class="myIcon_control myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
-    <!--<polygon points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/>-->
-    <!--</svg>-->
+<br>
+<br>
+<div class="vid">
+    <table class="controls">
+        <tr>
+            <td class="play_pause">
+                <svg viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0 L0 31 L31 15.5 Z" />
+                </svg>
+            </td>
+            <td class="progress">
+                <div class="progressBackground">
+                    <div class="loading"></div>
+                    <div class="playing"></div>
+                </div>
+            </td>
+            <td class="clock">00:00 / 00:00</td>
+            <!--<td class="muted">-->
+                <!--<svg id="" class="myIcon_control myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
+                    <!--&lt;!&ndash;the left speaker center&ndash;&gt;-->
+                    <!--<polygon class="myIcon_inactive_control" points="5,9 5,22 14,22 23,31 23,0 14,9"/>-->
+                    <!--&lt;!&ndash;the X&ndash;&gt;-->
+                    <!--<polygon class="myIcon_active_control" points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/>-->
+                <!--</svg>-->
+            <!--</td>-->
+            <td class="mute">
+                <svg id="" class="mute" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
+                    <polygon class="myIcon_active_control" points="0,9 0,22 9,22 18,31 18,0 9,9"/>
+                    <path class="myIcon_active_control" d="M23 8 A11 11 0 0 1 23 23 L26 26 A15.24 15.24 0 0 0 26 5 Z"></path>
+                </svg>
+            </td>
+            <td class="volume">
+                <svg id="myIcon_volume_setting" class="volume myIcon_active_control" viewBox="0 0 80 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="volumeState">
+                            <stop class="myIcon_active_control" offset="66%"/>
+                            <stop class="myIcon_inactive_control" offset="67%"/>
+                        </linearGradient>
+                    </defs>
+                    <polygon points="80,0 80,20 0,10" fill="url(#volumeState)"/>
+                </svg>
+            </td>
+            <td class="fullscreen">
+                <svg class="myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31">
+                    <path d="M0 0 L0 10 L4 10 L4 4 L12 4 L12 0 Z M0 21 L0 31 L12 31 L12 27 L4 27 L4 21 Z"/>
+                    <path d="M19 27 L19 31 L31 31 L31 21 L27 21 L27 27 Z M19 0 L19 4 L27 4 L27 10 L31 10 L31 0 Z" />
+                </svg>
+            </td>
+            <!--<td class="fullscreen">-->
+                <!--<svg class="myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31">-->
+                    <!--<path d="M2 18 L2 22 L9 22 L9 28 L13 28 L13 18 Z M18 18 L18 28 L23 28 L22 22 L29 22 L29 18 Z"/>-->
+                    <!--<path d="M2 9 L2 13 L13 13 L13 3 L9 3 L9 9 Z M22 3 L22 9 L29 9 L29 13 L18 13 L18 3 Z" />-->
+                <!--</svg>-->
+            <!--</td>-->
+        </tr>
+    </table>
 </div>
-<div class="controls">
-    <div class="progress">
-        <div class="progressBackground">
-            <div class="loading">
-                <div class="playing"></div>
-            </div>
-        </div>
-    </div>
-</div>
+<!--<div class="vid">-->
+    <!--<ul class="controls">-->
+        <!--<li>PLAY</li>-->
+        <!--<li>PROGRESS</li>-->
+        <!--<li>VOLUME</li>-->
+    <!--</ul>-->
+<!--</div>-->
+<br>
+<br>
 <script>
     var output = document.getElementById('myIcon_clock').childNodes[1];
     var controls = document.getElementById('myIcon_controls');
