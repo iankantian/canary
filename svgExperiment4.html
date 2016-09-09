@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SVG Test w/ JavaScript</title>
     <style>
         body {
@@ -37,14 +37,6 @@
         .myIcon_skip_after {
             border: 1px solid lightgray;
         }
-        .myIcon_skip_before {
-        }
-        /*#myIcon_title {*/
-            /*padding: 0 10px;*/
-            /*height: 30px;*/
-            /*float: left;*/
-        /*}*/
-
         #myIcon_close {
             margin: 10px;
             height: 30px;
@@ -75,8 +67,7 @@
             left: 0;
             width: 100%;
             height: 50px;
-            background: rgb(10, 40, 50) url("media/bunny_poster.jpg");
-            background-size: cover;
+            background: green;
         }
 
         #myIcon_controls td, th, tr {
@@ -135,18 +126,31 @@
         }
 
         /*smart phones in portrait*/
-        @media ( min-height: 1000px ) {
-            #myIcon_hud {
-                font-size: 40px;
-                line-height: 40px;
-            }
-            #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_active, #myIcon_fs_inactive {
-                width: 60px;
-                height: 60px;
-            }
-            #myIcon_volume {
-                width: 200px;
-                height: 60px;
+        @media ( min-height: 500px ){
+            @media ( orientation: portrait ){
+                #myIcon_hud {
+                    font-size: 40px;
+                    line-height: 40px;
+                }
+                #myIcon_controls{
+                    background-color: #ff5500;
+                }
+                #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_active, #myIcon_fs_inactive {
+                    width: 45px;
+                    height: 45px;
+                }
+                #myIcon_volume {
+                    display: none;
+                    /*width: 200px;*/
+                    /*height: 45px;*/
+                }
+                .myIcon_progress{
+                    display:none;
+                }
+                #myIcon_skip, #myIcon_title{
+                    line-height: 50px;
+                    height: 50px;
+                }
             }
         }
 
@@ -167,6 +171,7 @@
             #myIcon_controls {
                 height: 32px;
                 border-spacing: 8px;
+                background-color: #227ac6;
             }
         }
 
@@ -181,8 +186,8 @@
 
         #vid2 {
             position: relative;
-            width: 100%;
-            height: 350px;
+            width: 640px;
+            height: 360px;
             /*background-image: url("media/bunny_poster.jpg");*/
             background-color: dimgray;
         }
