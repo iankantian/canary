@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<!-- saved from url=(0056)http://localhost:63342/Vungle_Canary/svgExperiment4.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <title>SVG Test w/ JavaScript</title>
+    <style>
+        body {
+            background-color: rosybrown;
+            color: white;
+            font-size: 25px;
+        }
+        svg.myIcon {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .myIcon_invisible {
+            opacity: 0.0;
+        }
+        #myIcon_hud {
+            cursor: default;
+            width: 100%;
+            height: 100%;
+            font-family: sans-serif;
+            font-size: 25px;
+            line-height: 30px;
+            vertical-align: middle;
+            transition: opacity 1s;
+        }
+
+        #myIcon_title, #myIcon_skip {
+            line-height: 30px;
+            height: 30px;
+            padding: 0 10px;
+            float: left;
+        }
+        .myIcon_skip_after {
+            border: 1px solid lightgray;
+        }
+        .myIcon_skip_before {
+        }
+        /*#myIcon_title {*/
+            /*padding: 0 10px;*/
+            /*height: 30px;*/
+            /*float: left;*/
+        /*}*/
+
+        #myIcon_close {
+            margin: 10px;
+            height: 30px;
+            float: right;
+        }
+
+        .myIcon_active_control {
+            fill: white;
+            stop-color: white;
+            stroke: white;
+            stroke-width: 0;
+            border-color: white;
+        }
+
+        .myIcon_inactive_control {
+            fill: darkgray;
+            stop-color: darkgray;
+            stroke: darkgray;
+            stroke-width: 0;
+            border-color: darkgray;
+        }
+
+        #myIcon_controls {
+            position: absolute;
+            border-spacing: 15px;
+            border-collapse: separate;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: rgb(10, 40, 50) url("media/bunny_poster.jpg");
+            background-size: cover;
+        }
+
+        #myIcon_controls td, th, tr {
+            border-collapse: separate;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            border-spacing: 0;
+        }
+        #myIcon_clock {
+            height: 100%;
+            width: 150px;
+            cursor: default;
+        }
+        #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_active, #myIcon_fs_inactive {
+            width: 30px;
+            height: 30px;
+        }
+        #myIcon_volume {
+            width: 100px;
+            height: 30px;
+            cursor: col-resize;
+        }
+        .myIcon_progress {
+            cursor: col-resize;
+        }
+
+        .myIcon_progressBacking {
+            height: 40%;
+            border-radius: 100px;
+            border: 1px solid lightgray;
+            padding: 0;
+            background-color: dimgray;
+        }
+
+        #myIcon_playpos {
+            position: relative;
+            top: -100%;
+            border-radius: 100px;
+            border: none;
+            height: 100%;
+            width: 0;
+            background-color: white;
+            /*-webkit-transition: width 7s; !*7s for mock, use smaller to smooth it's motion, remove linear attribute*!*/
+
+            transition: width 5s linear; /*3s for mock, use smaller to smooth it's motion, remove linear attribute*/
+        }
+
+        #myIcon_loaded {
+            border-radius: 100px;
+            border: none;
+            height: 100%;
+            width: 0;
+            background-color: darkgray;
+            transition: width 3s; /*3s for mock, use smaller to smooth it's motion, remove linear attribute*/
+        }
+
+        /*smart phones in portrait*/
+        @media ( min-height: 1000px ) {
+            #myIcon_hud {
+                font-size: 40px;
+                line-height: 40px;
+            }
+            #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_active, #myIcon_fs_inactive {
+                width: 60px;
+                height: 60px;
+            }
+            #myIcon_volume {
+                width: 200px;
+                height: 60px;
+            }
+        }
+
+        /*regular desktop and tablet*/
+        @media ( min-device-width: 1200px ) {
+            #myIcon_hud {
+                font-size: 16px;
+                line-height: 16px;
+            }
+            #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_active, #myIcon_fs_inactive {
+                width: 20px;
+                height: 20px;
+            }
+            #myIcon_volume {
+                width: 100px;
+                height: 20px;
+            }
+            #myIcon_controls {
+                height: 32px;
+                border-spacing: 8px;
+            }
+        }
+
+        #vid {
+            position: relative;
+            width: 100%;
+            /*width: 640px;*/
+            height: 360px;
+            /*background-image: url("media/bunny_poster.jpg");*/
+            background-color: dimgray;
+        }
+
+        #vid2 {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            /*background-image: url("media/bunny_poster.jpg");*/
+            background-color: dimgray;
+        }
+    </style>
+</head>
+<body>
+
+
+<div id="vid2">
+    <div id="myIcon_hud">
+        <div id="myIcon_title">Ad Title</div>
+        <!--<div id="myIcon_skip" class="myIcon_skip_before">You may skip this ad in 7s</div>-->
+        <div id="myIcon_skip" class="myIcon_skip_after">Skip</div>
+        <div id="myIcon_close">
+            <svg class="myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"></polygon>
+            </svg>
+        </div>
+        <table id="myIcon_controls">
+            <tbody>
+            <tr>
+                <!--<td id="myIcon_play">-->
+                    <!--<svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
+                        <!--<path d="M0 0 L0 31 L31 15.5 Z" />-->
+                    <!--</svg>-->
+                <!--</td>-->
+                <td id="myIcon_pause">
+                    <svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 2 L2 29 L11 29 L11 2 Z"></path>
+                        <path d="M20 2 L20 29 L29 29 L29 2 Z"></path>
+                    </svg>
+                </td>
+                <td class="myIcon_progress">
+                    <div class="myIcon_progressBacking">
+                        <div id="myIcon_loaded" style="width: 100%;"></div>
+                        <div id="myIcon_playpos" style="width: 90%;"></div>
+                    </div>
+                </td>
+                <td id="myIcon_clock" class="myIcon_active_control">00:00 / 00:00</td>
+                <td class="myIcon_formatting_cell"></td>
+                <!--<td id="myIcon_mute">-->
+                    <!--<svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
+                        <!--<polygon class="myIcon_active_control" points="0,9 0,22 9,22 18,31 18,0 9,9"></polygon>-->
+                        <!--<path class="myIcon_active_control" d="M23 8 A11 11 0 0 1 23 23 L26 26 A15.24 15.24 0 0 0 26 5 Z"></path>-->
+                    <!--</svg>-->
+                <!--</td>-->
+                <td id="myIcon_muted">
+                    <svg id="" class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
+                        <!--the speaker-->
+                        <polygon class="myIcon_inactive_control" points="5,9 5,22 14,22 23,31 23,0 14,9"></polygon>
+                        <!--the X-->
+                        <polygon class="myIcon_active_control" points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"></polygon>
+                    </svg>
+                </td>
+                <td id="myIcon_volume">
+                    <svg class="myIcon" viewBox="0 0 80 30" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                        <defs>
+                            <lineargradient id="volumeState">
+                                <stop class="myIcon_active_control myIcon_vcpos" offset="75%"></stop>
+                                <stop class="myIcon_inactive_control myIcon_vcpos" offset="75%"></stop>
+                            </lineargradient>
+                        </defs>
+                        <polygon points="80,0 80,30 0,15" fill="url(#volumeState)"></polygon>
+                    </svg>
+                </td>
+                <td id="myIcon_fs_inactive">
+                    <svg class="myIcon myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31">
+                        <path d="M0 0 L0 10 L4 10 L4 4 L12 4 L12 0 Z M0 21 L0 31 L12 31 L12 27 L4 27 L4 21 Z"></path>
+                        <path d="M19 27 L19 31 L31 31 L31 21 L27 21 L27 27 Z M19 0 L19 4 L27 4 L27 10 L31 10 L31 0 Z"></path>
+                    </svg>
+                </td>
+                <!--<td id="myIcon_fs_active">-->
+                    <!--<svg class="myIcon myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31">-->
+                        <!--<path d="M2 18 L2 22 L9 22 L9 28 L13 28 L13 18 Z M18 18 L18 28 L22 28 L22 22 L29 22 L29 18 Z"/>-->
+                        <!--<path d="M2 9 L2 13 L13 13 L13 3 L9 3 L9 9 Z M22 3 L22 9 L29 9 L29 13 L18 13 L18 3 Z" />-->
+                    <!--</svg>-->
+                <!--</td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<p>
+    The status of volume control is edited by #volumestate.childnode[0] and [1] = % of volume.<br>
+    The status of progress bar is changed by updating the width percentages of playing and loading.<br>
+    Resizing is more of a chore than I'd like. The dynamic and varied nature of table renderings between browsers means
+    I couldn't make it just be editing the height of the controls. However, just scaling up the size of elements:
+</p><ul>
+    <li>play</li>
+    <li>clock</li>
+    <li>mute</li>
+    <li>fullscreen</li>
+    <li>volume position</li>
+</ul>
+will do the job, and that can be decided via @media queries, so that's no-code.<br>
+We can then remove positionController, all my obtuse fulldivOn, fullscreenOn, fullscreenOff, styleStash, and the DOM
+modification code with the 'on-resize' listener. This code removal extends to the 'media' type of asset as well. VPAID
+and FLASH type ads provide their own interfaces, in theory.
+<p></p>
+<br>
+<br>
+<script>
+    // mock demo of the style of the page, these will have to be integrated into the display interface.
+    // here we move the play position across to 90%
+    setTimeout(function(){
+        var myIcon_playpos = document.getElementById('myIcon_playpos');
+        var myIcon_loaded = document.getElementById('myIcon_loaded');
+        myIcon_playpos.style.width = 90 + '%';
+        myIcon_loaded.style.width = 100 + '%';
+    }, 2000 );
+    // here we move the volume position
+    setTimeout(function(){
+        var myIcon_vcpos = document.getElementsByClassName('myIcon_vcpos');
+        console.log( myIcon_vcpos );
+        var new_vspos = 75; // destination of the VC
+        var i = 0;
+        for( ; i< myIcon_vcpos.length; i++ ){
+           myIcon_vcpos[ i].setAttributeNS( null, 'offset', new_vspos + '%');
+        }
+    }, 2000 );
+
+    function myApplication() {
+        function createEl(target, type, attributes) {
+            var xmlns = 'http://www.w3.org/2000/svg';
+            var el = document.createElement(type);
+            for (var i = 0; i < attributes.length; i += 1) {
+//            console.log( 'prop is! ', attributes[i] );
+                for (var prop in attributes[i]) {
+                    console.log();
+                    if (attributes[i].hasOwnProperty(prop)) {
+                        el.setAttribute(prop, attributes[i][prop]);
+                    }
+                }
+            }
+            target.appendChild(el);
+            return el;
+        }
+
+        var vid2 = document.getElementById('vid2');
+
+        // pretend instance, similar to what the vendor offers:
+        var instance = {
+            adTitle: 'Cool Vungle Ad',
+            adDuration: 10.0,
+            skipTime: 5.0,
+            skipTextBefore: 'You can skip in ',
+            skipTextAfter: 'Skip',
+            skippable: true,
+            controls: {
+                play: true,
+                progress: true,
+                mute: true,
+                volume: true,
+                fullscreen: true
+            },
+            theme: 'dark'
+        };
+
+        var attr = [{'id': 'myIcon_hud_2'}, {'xmlns': 'http://www.w3.org/2000/svg'}];
+
+
+        var makeHud = function (target, instance) {
+            instance = instance ? instance : {};
+            this.hudElement_ = document.createElement('div');
+            this.hudElement_.setAttribute('id', 'myIcon_hud');
+            this.hudElement_.setAttribute('class', '');
+//            target.appendChild( this.hudElement_ );
+
+            // brute force innerHTML approach
+//            this.hudElement_.innerHTML = '<div id="myIcon_title"></div><div class="myIcon_skip_before myIcon_active_control" id="myIcon_skip"></div><div id="myIcon_close"><svg class="myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><polygon points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/></svg></div><table class="myIcon myIcon_controls"><tbody><tr><td class="myIcon myIcon_active_control" id="myIcon_play"><svg class="myIcon" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><path d="M2 2 L2 29 L29 15.5 Z" /></svg></td><td class="myIcon myIcon_active_control" id="myIcon_pause"><svg class="myIcon" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><path d="M2 2 L2 29 L11 29 L11 2 Z" /><path d="M20 2 L20 29 L29 29 L29 2 Z" /></svg></td><td class="myIcon myIcon_progress"><div class="myIcon_progressBacking"><div id="myIcon_loadpos"></div><div id="myIcon_playpos"></div></div></td><td class="myIcon" id="myIcon_clock">00:00 / 00:00</td><td class="myIcon" id="myIcon_muted"><svg id="" class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><!--the speaker--><polygon class="myIcon_inactive_control" points="5,9 5,22 14,22 23,31 23,0 14,9"/><!--the X--><polygon class="myIcon_active_control" points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/></svg></td><td class="myIcon" id="myIcon_mute"><svg id="" class="" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><polygon class="myIcon_active_control" points="0,9 0,22 9,22 18,31 18,0 9,9"/><path class="myIcon_active_control" d="M23 8 A11 11 0 0 1 23 23 L26 26 A15.24 15.24 0 0 0 26 5 Z"></path></svg></td><td class="myIcon myIcon_volume"><svg id="myIcon_volume" class="myIcon myIcon_active_control" viewBox="0 0 80 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="volumeState"><stop class="myIcon_active_control" offset="66%"/><stop class="myIcon_inactive_control" offset="67%"/></linearGradient></defs><polygon points="80,0 80,20 0,10" fill="url(#volumeState)"/></svg></td><td class="myIcon" id="myIcon_fullscreen_inactive"><svg class="myIcon myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31"><path d="M0 0 L0 10 L4 10 L4 4 L12 4 L12 0 Z M0 21 L0 31 L12 31 L12 27 L4 27 L4 21 Z"/><path d="M19 27 L19 31 L31 31 L31 21 L27 21 L27 27 Z M19 0 L19 4 L27 4 L27 10 L31 10 L31 0 Z" /></svg></td><td class="myIcon" id="myIcon_fullscreen_active"><svg class="myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31"><path d="M2 18 L2 22 L9 22 L9 28 L13 28 L13 18 Z M18 18 L18 28 L22 28 L22 22 L29 22 L29 18 Z"/><path d="M2 9 L2 13 L13 13 L13 3 L9 3 L9 9 Z M22 3 L22 9 L29 9 L29 13 L18 13 L18 3 Z" /></svg></td></tr></tbody></table>';
+
+            var titleDiv_ = document.getElementById('myIcon_title') || {};
+            var skipDiv_ = document.getElementById('myIcon_skip') || {};
+            var closeDiv_ = document.getElementById('myIcon_close');
+            var playDiv_ = document.getElementById('myIcon_play');
+            var pauseDiv_ = document.getElementById('myIcon_pause');
+            var progressDiv_ = document.getElementById('myIcon_progress');
+            var clockDiv_ = document.getElementById('myIcon_clock');
+            var muteDiv_ = document.getElementById('myIcon_mute');
+            var unMuteDiv_ = document.getElementById('myIcon_muted');
+            var volumeDiv_ = document.getElementById('myIcon_volume');
+            var fullscreenActiveDiv_ = document.getElementById('myIcon_fs_active');
+            var fullscreenInactiveDiv_ = document.getElementById('myIcon_fullscreen_inactive');
+
+            this.title = function (str) {
+                if (str) titleDiv_.innerHTML = str;
+                else if (instance.adTitle) {
+                    if (instance.adTitle.length > 0) titleDiv_.innerHTML = '"' + instance.adTitle + '"';
+                }
+                else {
+                    titleDiv_.style.display = 'none';
+                }
+            };
+            this.skipRemaining = function (num) {
+                if (instance.skipTextBefore) {
+                    skipDiv_.innerText = instance.skipTextBefore + ' ' + num + ' s';
+                }
+                else {
+                    skipDiv_.innerText = num + ' s';
+                }
+            };
+            this.skipTextAfter = function () {
+                if (instance.skipTextAfter) {
+                    if (instance.skipTextAfter.length > 0) {
+                        skipDiv_.innerText = instance.skipTextAfter;
+                    }
+                }
+                else {
+                    skipDiv_.style.display = 'none';
+                }
+            };
+
+            this.init = function () {
+            };
+
+            this.title();
+//            this.skipRemaining( 5 );
+            this.skipTextAfter();
+
+
+            this.showHud = (function () {
+                var hudVisible = false;
+                var hideTimer;
+
+                function hide() {
+                    console.log('hiding');
+                    hudVisible = false;
+                    hudElement_.setAttribute('class', 'myIcon_invisible');
+                }
+
+                function show() {
+                    console.log('showing');
+                    hudVisible = true;
+                    hudElement_.setAttribute('class', '');
+                }
+
+                function timer() {
+                    return setTimeout(hide, 1000);
+                }
+
+                return function () {
+                    if (!hudVisible) {
+                        show();
+                        hideTimer = timer();
+                    }
+                    else {
+                        clearTimeout(hideTimer);
+                        hideTimer = timer();
+                    }
+                };
+            })();
+
+            return this.hudElement_;
+        };
+
+        var app = function () {
+            return function () {
+                console.log('this is', this);
+//                var hud = makeHud( vid2, instance );
+//                console.log( hud );
+//                hud.addEventListener('click', hud.showHud );
+//                hud.addEventListener('mousemove', hud.showHud );
+//                hud.addEventListener('touchstart', hud.showHud );
+            }();
+        };
+        return app();
+    }
+
+    var stateCheck = setInterval(function () {
+        if (document.readyState === 'complete') {
+            clearInterval(stateCheck);
+            myApplication();
+        }
+    }, 100);
+</script>
+
+</body></html>
