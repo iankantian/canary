@@ -9,21 +9,24 @@
             color: white;
             font-size: 25px;
         }
+
         svg.myIcon {
             display: block;
             width: 100%;
             height: 100%;
         }
+
         .myIcon_invisible {
             opacity: 0.0;
         }
+
         #myIcon_hud {
             cursor: default;
             width: 100%;
             height: 100%;
             font-family: sans-serif;
-            font-size: 25px;
-            line-height: 30px;
+            font-size: 20px;
+            line-height: 25px;
             vertical-align: middle;
             transition: opacity 1s;
         }
@@ -34,9 +37,11 @@
             padding: 0 10px;
             float: left;
         }
+
         .myIcon_skip_after {
             border: 1px solid lightgray;
         }
+
         #myIcon_close {
             margin: 10px;
             height: 30px;
@@ -61,13 +66,13 @@
 
         #myIcon_controls {
             position: absolute;
-            border-spacing: 15px;
+            border-spacing: 10px;
             border-collapse: separate;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 50px;
-            background: green;
+            height:30px;
+            background: #061b2b;
         }
 
         #myIcon_controls td, th, tr {
@@ -77,20 +82,24 @@
             border: 0;
             border-spacing: 0;
         }
+
         #myIcon_clock {
             height: 100%;
             width: 150px;
             cursor: default;
         }
+
         #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_active, #myIcon_fs_inactive {
-            width: 30px;
-            height: 30px;
+            width: 20px;
+            height: 20px;
         }
+
         #myIcon_volume {
             width: 100px;
-            height: 30px;
+            height: 20px;
             cursor: col-resize;
         }
+
         .myIcon_progress {
             cursor: col-resize;
         }
@@ -125,34 +134,6 @@
             transition: width 3s; /*3s for mock, use smaller to smooth it's motion, remove linear attribute*/
         }
 
-        /*smart phones in portrait*/
-        @media ( min-height: 500px ){
-            @media ( orientation: portrait ){
-                #myIcon_hud {
-                    font-size: 40px;
-                    line-height: 40px;
-                }
-                #myIcon_controls{
-                    background-color: #ff5500;
-                }
-                #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_active, #myIcon_fs_inactive {
-                    width: 45px;
-                    height: 45px;
-                }
-                #myIcon_volume {
-                    display: none;
-                    /*width: 200px;*/
-                    /*height: 45px;*/
-                }
-                .myIcon_progress{
-                    display:none;
-                }
-                #myIcon_skip, #myIcon_title{
-                    line-height: 50px;
-                    height: 50px;
-                }
-            }
-        }
 
         /*regular desktop and tablet*/
         @media ( min-device-width: 1200px ) {
@@ -160,18 +141,20 @@
                 font-size: 16px;
                 line-height: 16px;
             }
+
             #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_active, #myIcon_fs_inactive {
                 width: 20px;
                 height: 20px;
             }
+
             #myIcon_volume {
                 width: 100px;
                 height: 20px;
             }
+
             #myIcon_controls {
                 height: 32px;
                 border-spacing: 8px;
-                background-color: #227ac6;
             }
         }
 
@@ -186,7 +169,7 @@
 
         #vid2 {
             position: relative;
-            width: 640px;
+            width: 100%;
             height: 360px;
             /*background-image: url("media/bunny_poster.jpg");*/
             background-color: dimgray;
@@ -210,9 +193,9 @@
             <tbody>
             <tr>
                 <!--<td id="myIcon_play">-->
-                    <!--<svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
-                        <!--<path d="M0 0 L0 31 L31 15.5 Z" />-->
-                    <!--</svg>-->
+                <!--<svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
+                <!--<path d="M0 0 L0 31 L31 15.5 Z" />-->
+                <!--</svg>-->
                 <!--</td>-->
                 <td id="myIcon_pause">
                     <svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
@@ -229,21 +212,25 @@
                 <td id="myIcon_clock" class="myIcon_active_control">00:00 / 00:00</td>
                 <td class="myIcon_formatting_cell"></td>
                 <!--<td id="myIcon_mute">-->
-                    <!--<svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
-                        <!--<polygon class="myIcon_active_control" points="0,9 0,22 9,22 18,31 18,0 9,9"></polygon>-->
-                        <!--<path class="myIcon_active_control" d="M23 8 A11 11 0 0 1 23 23 L26 26 A15.24 15.24 0 0 0 26 5 Z"></path>-->
-                    <!--</svg>-->
+                <!--<svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
+                <!--<polygon class="myIcon_active_control" points="0,9 0,22 9,22 18,31 18,0 9,9"></polygon>-->
+                <!--<path class="myIcon_active_control" d="M23 8 A11 11 0 0 1 23 23 L26 26 A15.24 15.24 0 0 0 26 5 Z"></path>-->
+                <!--</svg>-->
                 <!--</td>-->
                 <td id="myIcon_muted">
-                    <svg id="" class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
+                    <svg id="" class="myIcon myIcon_active_control" viewBox="0 0 31 31"
+                         xmlns="http://www.w3.org/2000/svg">
                         <!--the speaker-->
                         <polygon class="myIcon_inactive_control" points="5,9 5,22 14,22 23,31 23,0 14,9"></polygon>
                         <!--the X-->
-                        <polygon class="myIcon_active_control" points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/></polygon>
+                        <polygon class="myIcon_active_control"
+                                 points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/>
+                        </polygon>
                     </svg>
                 </td>
                 <td id="myIcon_volume">
-                    <svg class="myIcon" viewBox="0 0 80 30" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                    <svg class="myIcon" viewBox="0 0 80 30" xmlns="http://www.w3.org/2000/svg"
+                         preserveAspectRatio="none">
                         <defs>
                             <linearGradient id="volumeState">
                                 <stop class="myIcon_active_control myIcon_vcpos"></stop>
@@ -260,10 +247,10 @@
                     </svg>
                 </td>
                 <!--<td id="myIcon_fs_active">-->
-                    <!--<svg class="myIcon myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31">-->
-                        <!--<path d="M2 18 L2 22 L9 22 L9 28 L13 28 L13 18 Z M18 18 L18 28 L22 28 L22 22 L29 22 L29 18 Z"/>-->
-                        <!--<path d="M2 9 L2 13 L13 13 L13 3 L9 3 L9 9 Z M22 3 L22 9 L29 9 L29 13 L18 13 L18 3 Z" />-->
-                    <!--</svg>-->
+                <!--<svg class="myIcon myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31">-->
+                <!--<path d="M2 18 L2 22 L9 22 L9 28 L13 28 L13 18 Z M18 18 L18 28 L22 28 L22 22 L29 22 L29 18 Z"/>-->
+                <!--<path d="M2 9 L2 13 L13 13 L13 3 L9 3 L9 9 Z M22 3 L22 9 L29 9 L29 13 L18 13 L18 3 Z" />-->
+                <!--</svg>-->
                 <!--</td>-->
             </tr>
             </tbody>
@@ -292,22 +279,22 @@ and FLASH type ads provide their own interfaces, in theory.
 <script>
     // mock demo of the style of the page, these will have to be integrated into the display interface.
     // here we move the play position across to 90%
-    setTimeout(function(){
+    setTimeout(function () {
         var myIcon_playpos = document.getElementById('myIcon_playpos');
         var myIcon_loaded = document.getElementById('myIcon_loaded');
         myIcon_playpos.style.width = 90 + '%';
         myIcon_loaded.style.width = 100 + '%';
-    }, 2000 );
+    }, 2000);
     // here we move the volume position
-    setTimeout(function(){
+    setTimeout(function () {
         var myIcon_vcpos = document.getElementsByClassName('myIcon_vcpos');
-        console.log( myIcon_vcpos );
+        console.log(myIcon_vcpos);
         var new_vspos = 75; // destination of the VC
         var i = 0;
-        for( ; i< myIcon_vcpos.length; i++ ){
-           myIcon_vcpos[ i].setAttributeNS( null, 'offset', new_vspos + '%');
+        for (; i < myIcon_vcpos.length; i++) {
+            myIcon_vcpos[i].setAttributeNS(null, 'offset', new_vspos + '%');
         }
-    }, 2000 );
+    }, 2000);
 
     function myApplication() {
         function createEl(target, type, attributes) {
