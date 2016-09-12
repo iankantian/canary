@@ -21,6 +21,7 @@
         }
 
         #myIcon_hud {
+            position:relative;
             cursor: default;
             width: 100%;
             height: 100%;
@@ -158,16 +159,18 @@
             }
         }
 
-        #vid {
-            position: relative;
-            width: 100%;
-            /*width: 640px;*/
+        #vid1 {
+            /*display: none; !*turning off temporarily*!*/
+            margin: 10px;
+            width: 640px;
             height: 360px;
-            /*background-image: url("media/bunny_poster.jpg");*/
-            background-color: dimgray;
+            background-image: url("media/bunny_poster.jpg");
+            background-color: black;
         }
 
         #vid2 {
+            /*display: none; !*turning off temporarily*!*/
+            margin: 10px;
             position: relative;
             width: 100%;
             height: 360px;
@@ -178,7 +181,7 @@
 </head>
 <body>
 
-
+<div id="vid1"></div>
 <div id="vid2">
     <div id="myIcon_hud">
         <div id="myIcon_title">"Ad Title"</div>
@@ -192,15 +195,14 @@
         <table id="myIcon_controls">
             <tbody>
             <tr>
-                <!--<td id="myIcon_play">-->
-                <!--<svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
-                <!--<path d="M0 0 L0 31 L31 15.5 Z" />-->
-                <!--</svg>-->
-                <!--</td>-->
+                <td id="myIcon_play">
+                <svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0 L0 31 L31 15.5 Z" />
+                </svg>
+                </td>
                 <td id="myIcon_pause">
                     <svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2 2 L2 29 L11 29 L11 2 Z"></path>
-                        <path d="M20 2 L20 29 L29 29 L29 2 Z"></path>
+                        <path d="M2 2 L2 29 L11 29 L11 2 Z M20 2 L20 29 L29 29 L29 2 Z"></path>
                     </svg>
                 </td>
                 <td class="myIcon_progress">
@@ -211,12 +213,12 @@
                 </td>
                 <td id="myIcon_clock" class="myIcon_active_control">00:00 / 00:00</td>
                 <td class="myIcon_formatting_cell"></td>
-                <!--<td id="myIcon_mute">-->
-                <!--<svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
-                <!--<polygon class="myIcon_active_control" points="0,9 0,22 9,22 18,31 18,0 9,9"></polygon>-->
-                <!--<path class="myIcon_active_control" d="M23 8 A11 11 0 0 1 23 23 L26 26 A15.24 15.24 0 0 0 26 5 Z"></path>-->
-                <!--</svg>-->
-                <!--</td>-->
+                <td id="myIcon_mute">
+                <svg class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
+                <polygon class="myIcon_active_control" points="0,9 0,22 9,22 18,31 18,0 9,9"></polygon>
+                <path class="myIcon_active_control" d="M23 8 A11 11 0 0 1 23 23 L26 26 A15.24 15.24 0 0 0 26 5 Z"></path>
+                </svg>
+                </td>
                 <td id="myIcon_muted">
                     <svg id="" class="myIcon myIcon_active_control" viewBox="0 0 31 31"
                          xmlns="http://www.w3.org/2000/svg">
@@ -246,36 +248,18 @@
                         <path d="M19 27 L19 31 L31 31 L31 21 L27 21 L27 27 Z M19 0 L19 4 L27 4 L27 10 L31 10 L31 0 Z"></path>
                     </svg>
                 </td>
-                <!--<td id="myIcon_fs_active">-->
-                <!--<svg class="myIcon myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31">-->
-                <!--<path d="M2 18 L2 22 L9 22 L9 28 L13 28 L13 18 Z M18 18 L18 28 L22 28 L22 22 L29 22 L29 18 Z"/>-->
-                <!--<path d="M2 9 L2 13 L13 13 L13 3 L9 3 L9 9 Z M22 3 L22 9 L29 9 L29 13 L18 13 L18 3 Z" />-->
-                <!--</svg>-->
-                <!--</td>-->
+                <td id="myIcon_fs_active">
+                <svg class="myIcon myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31">
+                <path d="M2 18 L2 22 L9 22 L9 28 L13 28 L13 18 Z M18 18 L18 28 L22 28 L22 22 L29 22 L29 18 Z"/>
+                <path d="M2 9 L2 13 L13 13 L13 3 L9 3 L9 9 Z M22 3 L22 9 L29 9 L29 13 L18 13 L18 3 Z" />
+                </svg>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
-<p>
-    The status of volume control is edited by #volumestate.childnode[0] and [1] = % of volume.<br>
-    The status of progress bar is changed by updating the width percentages of playing and loading.<br>
-    Resizing is more of a chore than I'd like. The dynamic and varied nature of table renderings between browsers means
-    I couldn't make it just be editing the height of the controls. However, just scaling up the size of elements:
-<ul>
-    <li>play</li>
-    <li>clock</li>
-    <li>mute</li>
-    <li>fullscreen</li>
-    <li>volume position</li>
-</ul>
-will do the job, and that can be decided via @media queries, so that's no-code.<br>
-We can then remove positionController, all my obtuse fulldivOn, fullscreenOn, fullscreenOff, styleStash, and the DOM
-modification code with the 'on-resize' listener. This code removal extends to the 'media' type of asset as well. VPAID
-and FLASH type ads provide their own interfaces, in theory.
-</p>
-<br>
-<br>
+
 <script>
     // mock demo of the style of the page, these will have to be integrated into the display interface.
     // here we move the play position across to 90%
@@ -288,7 +272,6 @@ and FLASH type ads provide their own interfaces, in theory.
     // here we move the volume position
     setTimeout(function () {
         var myIcon_vcpos = document.getElementsByClassName('myIcon_vcpos');
-        console.log(myIcon_vcpos);
         var new_vspos = 75; // destination of the VC
         var i = 0;
         for (; i < myIcon_vcpos.length; i++) {
@@ -297,23 +280,10 @@ and FLASH type ads provide their own interfaces, in theory.
     }, 2000);
 
     function myApplication() {
-        function createEl(target, type, attributes) {
-            var xmlns = 'http://www.w3.org/2000/svg';
-            var el = document.createElement(type);
-            for (var i = 0; i < attributes.length; i += 1) {
-//            console.log( 'prop is! ', attributes[i] );
-                for (var prop in attributes[i]) {
-                    console.log();
-                    if (attributes[i].hasOwnProperty(prop)) {
-                        el.setAttribute(prop, attributes[i][prop]);
-                    }
-                }
-            }
-            target.appendChild(el);
-            return el;
-        }
+        var svgNS = document.createElementNS("http://www.w3.org/2000/svg", "svg").namespaceURI;
 
         var vid2 = document.getElementById('vid2');
+        var vid1 = document.getElementById('vid1');
 
         // pretend instance, similar to what the vendor offers:
         var instance = {
@@ -334,31 +304,117 @@ and FLASH type ads provide their own interfaces, in theory.
             theme: 'dark'
         };
 
-        var attr = [{'id': 'myIcon_hud_2'}, {'xmlns': 'http://www.w3.org/2000/svg'}];
-
-
         var makeHud = function (target, instance) {
             instance = instance ? instance : {};
-            this.hudElement_ = document.createElement('div');
-            this.hudElement_.setAttribute('id', 'myIcon_hud');
-            this.hudElement_.setAttribute('class', '');
-//            target.appendChild( this.hudElement_ );
 
-            // brute force innerHTML approach
-//            this.hudElement_.innerHTML = '<div id="myIcon_title"></div><div class="myIcon_skip_before myIcon_active_control" id="myIcon_skip"></div><div id="myIcon_close"><svg class="myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><polygon points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/></svg></div><table class="myIcon myIcon_controls"><tbody><tr><td class="myIcon myIcon_active_control" id="myIcon_play"><svg class="myIcon" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><path d="M2 2 L2 29 L29 15.5 Z" /></svg></td><td class="myIcon myIcon_active_control" id="myIcon_pause"><svg class="myIcon" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><path d="M2 2 L2 29 L11 29 L11 2 Z" /><path d="M20 2 L20 29 L29 29 L29 2 Z" /></svg></td><td class="myIcon myIcon_progress"><div class="myIcon_progressBacking"><div id="myIcon_loadpos"></div><div id="myIcon_playpos"></div></div></td><td class="myIcon" id="myIcon_clock">00:00 / 00:00</td><td class="myIcon" id="myIcon_muted"><svg id="" class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><!--the speaker--><polygon class="myIcon_inactive_control" points="5,9 5,22 14,22 23,31 23,0 14,9"/><!--the X--><polygon class="myIcon_active_control" points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/></svg></td><td class="myIcon" id="myIcon_mute"><svg id="" class="" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><polygon class="myIcon_active_control" points="0,9 0,22 9,22 18,31 18,0 9,9"/><path class="myIcon_active_control" d="M23 8 A11 11 0 0 1 23 23 L26 26 A15.24 15.24 0 0 0 26 5 Z"></path></svg></td><td class="myIcon myIcon_volume"><svg id="myIcon_volume" class="myIcon myIcon_active_control" viewBox="0 0 80 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="volumeState"><stop class="myIcon_active_control" offset="66%"/><stop class="myIcon_inactive_control" offset="67%"/></linearGradient></defs><polygon points="80,0 80,20 0,10" fill="url(#volumeState)"/></svg></td><td class="myIcon" id="myIcon_fullscreen_inactive"><svg class="myIcon myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31"><path d="M0 0 L0 10 L4 10 L4 4 L12 4 L12 0 Z M0 21 L0 31 L12 31 L12 27 L4 27 L4 21 Z"/><path d="M19 27 L19 31 L31 31 L31 21 L27 21 L27 27 Z M19 0 L19 4 L27 4 L27 10 L31 10 L31 0 Z" /></svg></td><td class="myIcon" id="myIcon_fullscreen_active"><svg class="myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31"><path d="M2 18 L2 22 L9 22 L9 28 L13 28 L13 18 Z M18 18 L18 28 L22 28 L22 22 L29 22 L29 18 Z"/><path d="M2 9 L2 13 L13 13 L13 3 L9 3 L9 9 Z M22 3 L22 9 L29 9 L29 13 L18 13 L18 3 Z" /></svg></td></tr></tbody></table>';
+            var owner = target.ownerDocument;
+            // first create the element
+            this.hudElement_ = owner.createElement('div');
+            var hudElement = this.hudElement_;
+            hudElement.setAttribute('id', 'myIcon_hud');
+            hudElement.setAttribute('class', '');
 
-            var titleDiv_ = document.getElementById('myIcon_title') || {};
-            var skipDiv_ = document.getElementById('myIcon_skip') || {};
-            var closeDiv_ = document.getElementById('myIcon_close');
-            var playDiv_ = document.getElementById('myIcon_play');
-            var pauseDiv_ = document.getElementById('myIcon_pause');
-            var progressDiv_ = document.getElementById('myIcon_progress');
-            var clockDiv_ = document.getElementById('myIcon_clock');
-            var muteDiv_ = document.getElementById('myIcon_mute');
-            var unMuteDiv_ = document.getElementById('myIcon_muted');
-            var volumeDiv_ = document.getElementById('myIcon_volume');
-            var fullscreenActiveDiv_ = document.getElementById('myIcon_fs_active');
-            var fullscreenInactiveDiv_ = document.getElementById('myIcon_fullscreen_inactive');
+            var titleDiv_ = owner.createElement('div');
+            titleDiv_.setAttribute('id', 'myIcon_title');
+            titleDiv_.setAttribute('class', 'myIcon_active_control');
+
+            var skipDiv_ = owner.createElement('div');
+            skipDiv_.setAttribute('id', 'myIcon_skip');
+            skipDiv_.setAttribute('class', 'myIcon_skip_before myIcon_active_control');
+
+            var close_ = owner.createElement('div');
+            close_.setAttribute('class', 'myIcon_active_control');
+            close_.setAttribute('id', 'myIcon_close');
+
+            var closeSvg = owner.createElementNS( svgNS, 'svg' );
+            closeSvg.setAttributeNS(null, 'viewBox', '0 0 31 31');
+
+            var closeSvgInner = owner.createElementNS( svgNS, 'polygon' );
+            closeSvgInner.setAttributeNS(null, 'points', '3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5' );
+            closeSvg.appendChild( closeSvgInner );
+            close_.appendChild( closeSvg );
+
+            var controlTable_ = owner.createElement( 'table' );
+            controlTable_.setAttribute('id', 'myIcon_controls');
+            var controlBody_ = owner.createElement( 'tbody' );
+            controlTable_.appendChild( controlBody_ );
+
+            var controlRow_ = owner.createElement( 'tr' );
+            controlBody_.appendChild( controlRow_ );
+
+            var play_ = owner.createElement( 'td' );
+            play_.setAttribute('id', 'myIcon_play');
+            var playSvg_ = owner.createElementNS( svgNS, 'svg' );
+            playSvg_.setAttributeNS(null, 'viewBox', '0 0 31 31');
+            playSvg_.setAttributeNS(null, 'class', 'myIcon myIcon_active_control');
+            var playSvgInner_ = owner.createElementNS( svgNS, 'path' );
+            playSvgInner_.setAttributeNS(null, 'd', 'M0 0 L0 31 L31 15.5 Z' );
+            playSvg_.appendChild( playSvgInner_ );
+            play_.appendChild( playSvg_ );
+
+            var pause_ = owner.createElement( 'td' );
+            pause_.setAttribute('id', 'myIcon_pause');
+            var pauseSvg_ = owner.createElementNS( svgNS, 'svg' );
+            pauseSvg_.setAttributeNS(null, 'viewBox', '0 0 31 31');
+            pauseSvg_.setAttributeNS(null, 'class', 'myIcon myIcon_active_control');
+            var pauseSvgInner_ = owner.createElementNS( svgNS, 'path' );
+            pauseSvgInner_.setAttributeNS(null, 'd', 'M2 2 L2 29 L11 29 L11 2 Z M20 2 L20 29 L29 29 L29 2 Z' );
+            pauseSvg_.appendChild( pauseSvgInner_ );
+            pause_.appendChild( pauseSvg_ );
+            
+            var progress_ = owner.createElement( 'td' );
+            progress_.setAttribute('class', 'myIcon_progress');
+            var progressBack_ = owner.createElement( 'div' );
+            progressBack_.setAttribute('class', 'myIcon_progressBacking');
+            var loaded_ = owner.createElement( 'div' );
+            loaded_.setAttribute('id', 'myIcon_loaded');
+            var playpos_ = owner.createElement( 'div' );
+            playpos_.setAttribute('id', 'myIcon_playpos');
+            progressBack_.appendChild( loaded_ );
+            progressBack_.appendChild( playpos_ );
+            progress_.appendChild( progressBack_ );
+
+            var clock_ = owner.createElement( 'td' );
+            clock_.setAttribute('id', 'myIcon_clock');
+            clock_.innerHTML = '00:00 / 00:00';
+
+            var mute_ = owner.createElement( 'td' );
+            mute_.setAttribute('id', 'myIcon_mute');
+            var muteSvg_ = owner.createElementNS( svgNS, 'svg' );
+            muteSvg_.setAttributeNS(null, 'viewBox', '0 0 31 31');
+            muteSvg_.setAttributeNS(null, 'class', 'myIcon myIcon_active_control');
+            var muteSvgInner_ = owner.createElementNS( svgNS, 'path' );
+            muteSvgInner_.setAttributeNS(null, 'd', 'M0 9 L0 22 L9 22 L18 31 L18 0 L9 9 Z M23 8 A11 11 0 0 1 23 23 L26 26 A15.24 15.24 0 0 0 26 5 Z' );
+            muteSvg_.appendChild( muteSvgInner_ );
+            mute_.appendChild( muteSvg_ );
+
+            var muted_ = owner.createElement( 'td' );
+            muted_.setAttribute('id', 'myIcon_muted');
+            var volume_ = owner.createElement( 'td' );
+            volume_.setAttribute('id', 'myIcon_volume');
+            var fsInactive_ = owner.createElement( 'td' );
+            fsInactive_.setAttribute('id', 'myIcon_fs_inactive');
+            var fsActive_ = owner.createElement( 'td' );
+            fsActive_.setAttribute('id', 'myIcon_fs_active');
+
+            controlRow_.appendChild( play_ );
+            controlRow_.appendChild( pause_ );
+            controlRow_.appendChild( progress_ );
+            controlRow_.appendChild( clock_ );
+            controlRow_.appendChild( mute_ );
+            controlRow_.appendChild( muted_ );
+            controlRow_.appendChild( volume_ );
+            controlRow_.appendChild( fsInactive_ );
+            controlRow_.appendChild( fsActive_ );
+
+
+            hudElement.appendChild(titleDiv_);
+            hudElement.appendChild(skipDiv_);
+            hudElement.appendChild(close_);
+            hudElement.appendChild( controlTable_ );
+            target.appendChild( hudElement );
+
+
 
             this.title = function (str) {
                 if (str) titleDiv_.innerHTML = str;
@@ -387,54 +443,55 @@ and FLASH type ads provide their own interfaces, in theory.
                     skipDiv_.style.display = 'none';
                 }
             };
-
-            this.init = function () {
-            };
-
+//
+//            this.init = function () {
+//            };
+//
             this.title();
-//            this.skipRemaining( 5 );
-            this.skipTextAfter();
+            this.skipRemaining( 5 );
+//            this.skipTextAfter();
+//
+//
+//            this.showHud = (function () {
+//                var hudVisible = false;
+//                var hideTimer;
+//
+//                function hide() {
+//                    console.log('hiding');
+//                    hudVisible = false;
+//                    hudElement_.setAttribute('class', 'myIcon_invisible');
+//                }
+//
+//                function show() {
+//                    console.log('showing');
+//                    hudVisible = true;
+//                    hudElement_.setAttribute('class', '');
+//                }
+//
+//                function timer() {
+//                    return setTimeout(hide, 1000);
+//                }
+//
+//                return function () {
+//                    if (!hudVisible) {
+//                        show();
+//                        hideTimer = timer();
+//                    }
+//                    else {
+//                        clearTimeout(hideTimer);
+//                        hideTimer = timer();
+//                    }
+//                };
+//            })();
 
-
-            this.showHud = (function () {
-                var hudVisible = false;
-                var hideTimer;
-
-                function hide() {
-                    console.log('hiding');
-                    hudVisible = false;
-                    hudElement_.setAttribute('class', 'myIcon_invisible');
-                }
-
-                function show() {
-                    console.log('showing');
-                    hudVisible = true;
-                    hudElement_.setAttribute('class', '');
-                }
-
-                function timer() {
-                    return setTimeout(hide, 1000);
-                }
-
-                return function () {
-                    if (!hudVisible) {
-                        show();
-                        hideTimer = timer();
-                    }
-                    else {
-                        clearTimeout(hideTimer);
-                        hideTimer = timer();
-                    }
-                };
-            })();
-
-            return this.hudElement_;
+            target.appendChild( this.hudElement_ );
         };
 
         var app = function () {
             return function () {
                 console.log('this is', this);
-//                var hud = makeHud( vid2, instance );
+                var hud = makeHud( vid1, instance );
+//                var hud2 = makeHud( vid2, instance );
 //                console.log( hud );
 //                hud.addEventListener('click', hud.showHud );
 //                hud.addEventListener('mousemove', hud.showHud );

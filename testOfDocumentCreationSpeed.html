@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Test w/ JavaScript</title>
+</head>
+<body>
+<style>
+    #speedtest{
+        width:10px;
+        height:10px;
+    }
+    body *{
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+    div{
+        display:inline;
+    }
+</style>
+<div id="vid1"></div>
+
+<script>
+    function myApplication() {
+        var svgNS = document.createElementNS("http://www.w3.org/2000/svg", "svg").namespaceURI;
+
+        function createEl( parent, descr ) {
+            var i;
+            var ns = descr.ns || '';
+            var type = descr.type || 'object';
+            var attr = descr.attr || [];
+            var children = descr.children || [];
+            var el;
+            if( ns == 'svg' ){
+                el = document.createElementNS( svgNS, type );
+            }
+            else{
+                el = document.createElement( type );
+            }
+            for (i = 0; i < attr.length; i += 1) {
+                for (var prop in attr[ i ]) {
+                    if (attr[i].hasOwnProperty(prop)) {
+                        el.setAttribute(prop, attr[i][prop]);
+                    }
+                }
+            }
+            for (i = 0; i < children.length; i += 1) {
+                if( !ns ){
+                    createEl( el, children[ i ] );
+                }
+                else{
+                    createEl( el, children[ i ], ns );
+                }
+            }
+            parent.appendChild(el);
+            return el;
+        }
+
+        var vid2 = document.getElementById('vid2');
+        var vid1 = document.getElementById('vid1');
+
+        // pretend instance, similar to what the vendor offers:
+        var instance = {
+            adTitle: 'Cool Vungle Ad',
+            adDuration: 10.0,
+            skipTime: 5.0,
+            skipTextBefore: 'You can skip in ',
+            skipTextAfter: 'Skip',
+            skippable: true,
+            controls: {
+                play: true,
+                progress: true,
+                mute: true,
+                volume: true,
+                fullscreen: true,
+                cancel: true
+            },
+            theme: 'dark'
+        };
+
+        var makeHud = function (target, instance) {
+            instance = instance ? instance : {};
+            // first create the element
+            this.hudElement_ = document.createElement('div');
+            var hudElement = this.hudElement_;
+            hudElement.setAttribute('id', 'myIcon_hud');
+            hudElement.setAttribute('class', '');
+
+            // runs 100x a second, would be slower in a page with more html to comb through!  By far it's the slowest way to do this thing.
+            function stringAndGetElement( ){
+                // brute force innerHTML approach
+                hudElement.innerHTML += '<div id="myIcon_title"></div><div class="myIcon_skip_before myIcon_active_control" id="myIcon_skip"></div><div id="myIcon_close"><svg id="speedtest" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><polygon points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/></svg></div>';
+                var playDiv_ = document.getElementById('myIcon_play');
+                var pauseDiv_ = document.getElementById('myIcon_pause');
+                var progressDiv_ = document.getElementById('myIcon_progress');
+                var clockDiv_ = document.getElementById('myIcon_clock');
+                var muteDiv_ = document.getElementById('myIcon_mute');
+                var unMuteDiv_ = document.getElementById('myIcon_muted');
+                var volumeDiv_ = document.getElementById('myIcon_volume');
+                var fullscreenActiveDiv_ = document.getElementById('myIcon_fs_active');
+                var fullscreenInactiveDiv_ = document.getElementById('myIcon_fullscreen_inactive');
+                target.appendChild( hudElement );
+            }
+
+            // runs 833x a second
+            function customTooClever(){
+                // OK, this is just silly: this requires calls to custom functions instead of built-in functions.
+                // Might be example of trying too hard to be clever.  However, this could be developed into a clean
+                // javascript object formatted way to store and create any elements or SVG.
+                var titleDiv_ = createEl( hudElement, {
+                    'type':'div',
+                    'attr':[
+                        { 'id': 'myIcon_title' }
+                    ] } );
+                var skipDiv_ = createEl( hudElement, {
+                    'type':'div',
+                    'attr':[
+                        { 'id': 'myIcon_skip' },
+                        { 'class': 'myIcon_skip_after' }
+                    ] } );
+                var closeDiv_ = createEl( hudElement, {
+                    'type':'div',
+                    'attr':[
+                        { 'id': 'myIcon_close' }
+                    ] } );
+                var closeSVG_ = createEl( closeDiv_, {
+                    'ns':'svg',
+                    'type':'svg',
+                    'attr':[
+                        { 'id':'speedtest' },
+                        { 'viewBox': '0 0 31 31' }
+                    ],
+                    'children':[
+                        {
+                            'ns':'svg',
+                            'type':'polygon',
+                            'attr':[ { 'points': '3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5' } ]
+                        }
+                    ]
+                } );
+
+                target.appendChild( hudElement );
+            }
+
+
+            // 1428x a second:  meaning I could do this 18x per frame refresh period, plenty fast, uses standard commands
+            function vanillaDomIt(){
+                var title = document.createElement('div');
+                title.setAttribute('id', 'myIcon_title');
+                var skip = document.createElement('div');
+                skip.setAttribute('id', 'myIcon_skip');
+                skip.setAttribute('class', 'myIcon_skip_before myIcon_active_control');
+
+                var close = document.createElement('div');
+                close.setAttribute('id', 'myIcon_close');
+
+                var closeSvg = document.createElementNS( svgNS, 'svg' );
+                closeSvg.setAttributeNS(null, 'id', 'speedtest');
+                closeSvg.setAttributeNS(null, 'viewBox', '0 0 31 31');
+
+                var closeSvgInner = document.createElementNS( svgNS, 'polygon' );
+                closeSvgInner.setAttributeNS(null, 'points', '3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5' );
+                closeSvg.appendChild( closeSvgInner );
+                close.appendChild( closeSvg );
+
+                hudElement.appendChild(title);
+                hudElement.appendChild(skip);
+                hudElement.appendChild(close);
+
+                target.appendChild( hudElement );
+            }
+
+            var i;
+            for( i = 0; i < 10; i+=1 ){
+                vanillaDomIt();
+//                customTooClever();
+//                stringAndGetElement();
+            }
+
+//            this.title = function (str) {
+//                if (str) titleDiv_.innerHTML = str;
+//                else if (instance.adTitle) {
+//                    if (instance.adTitle.length > 0) titleDiv_.innerHTML = '"' + instance.adTitle + '"';
+//                }
+//                else {
+//                    titleDiv_.style.display = 'none';
+//                }
+//            };
+//            this.skipRemaining = function (num) {
+//                if (instance.skipTextBefore) {
+//                    skipDiv_.innerText = instance.skipTextBefore + ' ' + num + ' s';
+//                }
+//                else {
+//                    skipDiv_.innerText = num + ' s';
+//                }
+//            };
+//            this.skipTextAfter = function () {
+//                if (instance.skipTextAfter) {
+//                    if (instance.skipTextAfter.length > 0) {
+//                        skipDiv_.innerText = instance.skipTextAfter;
+//                    }
+//                }
+//                else {
+//                    skipDiv_.style.display = 'none';
+//                }
+//            };
+
+
+//
+//            this.init = function () {
+//            };
+//
+
+
+//            this.title();
+//            this.skipRemaining( 5 );
+
+
+//            this.skipTextAfter();
+//
+//
+//            this.showHud = (function () {
+//                var hudVisible = false;
+//                var hideTimer;
+//
+//                function hide() {
+//                    console.log('hiding');
+//                    hudVisible = false;
+//                    hudElement_.setAttribute('class', 'myIcon_invisible');
+//                }
+//
+//                function show() {
+//                    console.log('showing');
+//                    hudVisible = true;
+//                    hudElement_.setAttribute('class', '');
+//                }
+//
+//                function timer() {
+//                    return setTimeout(hide, 1000);
+//                }
+//
+//                return function () {
+//                    if (!hudVisible) {
+//                        show();
+//                        hideTimer = timer();
+//                    }
+//                    else {
+//                        clearTimeout(hideTimer);
+//                        hideTimer = timer();
+//                    }
+//                };
+//            })();
+            console.log('done');
+
+        };
+
+        var app = function () {
+            return function () {
+                var hud = makeHud( vid1, instance );
+//                console.log( hud );
+//                hud.addEventListener('click', hud.showHud );
+//                hud.addEventListener('mousemove', hud.showHud );
+//                hud.addEventListener('touchstart', hud.showHud );
+            }();
+        };
+        return app();
+    }
+
+    var stateCheck = setInterval(function () {
+        if (document.readyState === 'complete') {
+            clearInterval(stateCheck);
+            myApplication();
+        }
+    }, 100);
+</script>
+</body>
+</html>

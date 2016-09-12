@@ -80,7 +80,7 @@
             text-align: center;
             cursor: default;
         }
-        #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fullscreen_inactive, #myIcon_fs_active {
+        #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_inactive, #myIcon_fs_active {
             margin: 10px;
             height: 40px;
             width: 40px;
@@ -91,10 +91,10 @@
             top: 0;
             float: left;
         }
-        #myIcon_mute, #myIcon_muted, #myIcon_clock, #myIcon_fullscreen_inactive, #myIcon_fs_active {
+        #myIcon_mute, #myIcon_muted, #myIcon_clock, #myIcon_fs_inactive, #myIcon_fs_active {
             float: right;
         }
-        #myIcon_fullscreen_inactive, #myIcon_fs_active {
+        #myIcon_fs_inactive, #myIcon_fs_active {
             position: absolute;
             right: 0;
             top: 0;
@@ -151,7 +151,7 @@
                 .myIcon_controls {
                     height: 110px;
                 }
-                #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fullscreen_inactive, #myIcon_fs_active {
+                #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_inactive, #myIcon_fs_active {
                     margin: 15px 30px 15px 30px;
                     width: 80px;
                     height: 80px;
@@ -186,7 +186,7 @@
         }
         /*regular desktop and tablet*/
         @media ( min-device-width: 1200px ){
-            #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fullscreen_inactive, #myIcon_fs_active {
+            #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_inactive, #myIcon_fs_active {
                 margin: 5px;
                 height: 20px;
                 width: 20px;
@@ -226,7 +226,7 @@
 
         #vid{
             position: relative;
-            width: 100%;
+            min-width: 100%;
             /*width: 640px;*/
             height: 360px;
             /*background-image: url("media/bunny_poster.jpg");*/
@@ -265,21 +265,21 @@
                     <path d="M20 2 L20 29 L29 29 L29 2 Z"></path>
                 </svg>
             </div>
-            <div class="myIcon myIcon_progress">
-                <div class="myIcon_progressBacking">
-                    <div id="myIcon_loadpos"></div>
-                    <div id="myIcon_playpos"></div>
-                </div>
-            </div>
-            <div class="myIcon" id="myIcon_clock">00:00 / 00:00</div>
-            <div class="myIcon" id="myIcon_muted">
-                <svg id="" class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
-                    <!--the speaker-->
-                    <polygon class="myIcon_inactive_control" points="5,9 5,22 14,22 23,31 23,0 14,9"></polygon>
-                    <!--the X-->
-                    <polygon class="myIcon_active_control" points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/></polygon>
-                </svg>
-            </div>
+            <!--<div class="myIcon myIcon_progress">-->
+                <!--<div class="myIcon_progressBacking">-->
+                    <!--<div id="myIcon_loadpos"></div>-->
+                    <!--<div id="myIcon_playpos"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="myIcon" id="myIcon_clock">00:00 / 00:00</div>-->
+            <!--<div class="myIcon" id="myIcon_muted">-->
+                <!--<svg id="" class="myIcon myIcon_active_control" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">-->
+                    <!--&lt;!&ndash;the speaker&ndash;&gt;-->
+                    <!--<polygon class="myIcon_inactive_control" points="5,9 5,22 14,22 23,31 23,0 14,9"></polygon>-->
+                    <!--&lt;!&ndash;the X&ndash;&gt;-->
+                    <!--<polygon class="myIcon_active_control" points="3,0 0,3 12.5,15.5 0,28 3,31 15.5,18.5 28,31 31,28 18.5,15.5 31,3 28,0 15.5,12.5"/></polygon>-->
+                <!--</svg>-->
+            <!--</div>-->
             <div class="myIcon" id="myIcon_mute">
                 <svg id="" class="" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
                     <polygon class="myIcon_active_control" points="0,9 0,22 9,22 18,31 18,0 9,9"></polygon>
@@ -297,7 +297,7 @@
                     <polygon points="80,0 80,30 0,15" fill="url(#volumeState)"></polygon>
                 </svg>
             </div>
-            <div class="myIcon" id="myIcon_fullscreen_inactive">
+            <div class="myIcon" id="myIcon_fs_inactive">
                 <svg class="myIcon myIcon_active_control" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31">
                     <path d="M0 0 L0 10 L4 10 L4 4 L12 4 L12 0 Z M0 21 L0 31 L12 31 L12 27 L4 27 L4 21 Z"></path>
                     <path d="M19 27 L19 31 L31 31 L31 21 L27 21 L27 27 Z M19 0 L19 4 L27 4 L27 10 L31 10 L31 0 Z"></path>
@@ -394,7 +394,7 @@ and FLASH type ads provide their own interfaces, in theory.
             var unMuteDiv_ = document.getElementById('myIcon_muted');
             var volumeDiv_ = document.getElementById('myIcon_volume');
             var fullscreenActiveDiv_ = document.getElementById('myIcon_fs_active');
-            var fullscreenInactiveDiv_ = document.getElementById('myIcon_fullscreen_inactive');
+            var fullscreenInactiveDiv_ = document.getElementById('myIcon_fs_inactive');
 
             this.title = function( str ){
                 if( str ) titleDiv_.innerHTML = str;
