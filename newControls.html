@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Test w/ JavaScript</title>
+    <style>
+        body {
+            background-color: rosybrown;
+            color: white;
+            font-size: 25px;
+        }
+
+        svg.myIcon {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .myIcon_invisible {
+            opacity: 0.0;
+        }
+
+        #myIcon_hud {
+            position:relative;
+            cursor: default;
+            width: 100%;
+            height: 100%;
+            font-family: sans-serif;
+            font-size: 20px;
+            line-height: 25px;
+            vertical-align: middle;
+            transition: opacity 1s;
+        }
+
+        #myIcon_title, #myIcon_skip {
+            line-height: 30px;
+            height: 30px;
+            padding: 0 10px;
+            float: left;
+        }
+
+        .myIcon_skip_after {
+            border: 1px solid lightgray;
+        }
+
+        #myIcon_close {
+            margin: 10px;
+            height: 30px;
+            float: right;
+        }
+
+        .myIcon_active_control {
+            fill: white;
+            stop-color: white;
+            stroke: white;
+            stroke-width: 0;
+            border-color: white;
+        }
+
+        .myIcon_inactive_control {
+            fill: darkgray;
+            stop-color: darkgray;
+            stroke: darkgray;
+            stroke-width: 0;
+            border-color: darkgray;
+        }
+
+        #myIcon_controls {
+            position: absolute;
+            border-spacing: 10px;
+            border-collapse: separate;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height:30px;
+            background: #061b2b;
+        }
+
+        #myIcon_controls td, th, tr {
+            border-collapse: separate;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            border-spacing: 0;
+        }
+
+        #myIcon_clock {
+            height: 100%;
+            width: 125px;
+        }
+
+        #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_active, #myIcon_fs_inactive {
+            width: 20px;
+            height: 20px;
+        }
+
+        #myIcon_volume {
+            width: 100px;
+            height: 20px;
+            cursor: col-resize;
+        }
+
+        .myIcon_progress {
+            cursor: col-resize;
+        }
+
+        .myIcon_progressBacking {
+            height: 40%;
+            border-radius: 100px;
+            border: 1px solid lightgray;
+            padding: 0;
+            background-color: dimgray;
+        }
+
+        #myIcon_playpos, #myIcon_loaded{
+            height: 100%;
+            width: 0;
+            border-radius: 100px;
+            border: none;
+        }
+        #myIcon_playpos {
+            position: relative;
+            top: -100%;
+            background-color: white;
+        }
+        #myIcon_loaded {
+            background-color: darkgray;
+        }
+
+
+        /*regular desktop and tablet*/
+        @media ( min-device-width: 1200px ) {
+            #myIcon_hud {
+                font-size: 16px;
+                line-height: 16px;
+            }
+
+            #myIcon_play, #myIcon_pause, #myIcon_muted, #myIcon_close, #myIcon_mute, #myIcon_fs_active, #myIcon_fs_inactive {
+                width: 20px;
+                height: 20px;
+            }
+
+            #myIcon_volume {
+                width: 100px;
+                height: 20px;
+            }
+
+            #myIcon_controls {
+                height: 32px;
+                border-spacing: 8px;
+            }
+        }
+
+        #vid1 {
+            /*display: none; !*turning off temporarily*!*/
+            margin: 10px;
+            width: 640px;
+            height: 360px;
+            background-image: url("media/bunny_poster.jpg");
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+
+<div id="vid1"></div>
+
+<script>
+    function myApplication() {
+        var vid1 = document.getElementById('vid1');
+
+        // a mock instance object, similar to what the vendor uses:
+        var instance = {
+            adTitle: 'Cool Vungle Ad',
+            adDuration: 10.0,
+            skipTime: 5.0,
+            skipTextBefore: 'You can skip in ',
+            skipTextAfter: 'Skip',
+            skippable: true,
+            controls: {
+                play: true,
+                progress: true,
+                mute: true,
+                volume: true,
+                fullscreen: true,
+                cancel: true
+            },
+            theme: 'dark'
+        };
+
+        var makeHud = function (target, instance) {
+            instance = instance ? instance : { controls: { play: false, progress: false, mute: false, volume: false, fullscreen: false, cancel: false } };
+            var owner,
+                svgNS,
+                hudElement,
+                titleDiv_,
+                skipDiv_,
+                close_,
+                closeSvg, closeSvgInner,
+                controlTable_, controlBody_, controlRow_, controlFlag_,
+                play_, playSvg_, playSvgInner_,
+                pause_, pauseSvg_, pauseSvgInner_,
+                progress_, progressBack_, loaded_, playpos_,
+                clock_,
+                mute_, muteSvg_, muteSvgInner_,
+                muted_,   mutedSvg_,   mutedSvgInner_,  mutedSvgInnerX_,
+                volume_, volumeSvg_, volumeSvgInner_, volumeDefs_, volumeGrad_, volumeGradStop1_, volumeGradStop2_,
+                fsInactive_, fsInactiveSVG_, fsInactiveInner_, fsActive_, fsActiveSVG_, fsActiveInner_,
+                play, pause, close, mute, unmute, fullscreen;
+
+            // verify document identity
+            owner = target.ownerDocument;
+            // verify document svg namespace
+            svgNS = document.createElementNS("http://www.w3.org/2000/svg", "svg").namespaceURI;
+
+            hudElement = owner.createElement('div');
+            hudElement.setAttribute('id', 'myIcon_hud');
+            hudElement.setAttribute('class', 'myIcon_invisible');
+
+            this.element = hudElement; // handy little property.
+
+            // option 1: just write it in, text style.  then later getbyId to get the parts you need out of it.
+            //hudElement.innerHTML='<div id="myIcon_hud" class="myIcon_invisible"><div id="myIcon_title" class="myIcon_active_control">"Cool Vungle Ad"</div><div id="myIcon_skip" class="myIcon_skip_before myIcon_active_control">Skip</div><div class="myIcon_active_control" id="myIcon_close"><svg viewBox="0 0 31 31"><path d="M3 0 L0 3 L28 31 L31 28 Z M0 28 L3 31 L31 3 L28 0 Z"></path></svg></div><table id="myIcon_controls"><tbody><tr><td id="myIcon_play"><svg viewBox="0 0 31 31" class="myIcon myIcon_active_control"><path d="M0 0 L0 31 L31 15.5 Z"></path></svg></td><td id="myIcon_pause"><svg viewBox="0 0 31 31" class="myIcon myIcon_active_control"><path d="M2 2 L2 29 L11 29 L11 2 Z M20 2 L20 29 L29 29 L29 2 Z"></path></svg></td><td class="myIcon_progress"><div class="myIcon_progressBacking"><div id="myIcon_loaded" style="width: 100%;"></div><div id="myIcon_playpos" style="width: 90%;"></div></div></td><td id="myIcon_clock">00:00 / 00:00</td><td id="myIcon_mute"><svg viewBox="0 0 31 31" class="myIcon myIcon_active_control"><path d="M0 9 L0 22 L9 22 L18 31 L18 0 L9 9 Z M23 8 A11 11 0 0 1 23 23 L26 26 A15.24 15.24 0 0 0 26 5 Z"></path></svg></td><td id="myIcon_muted"><svg viewBox="0 0 31 31" class="myIcon myIcon_active_control"><path d="M5 9 L5 22 L14 22 L23 31 L23 0 L14 9 Z" class="myIcon_inactive_control"></path><path class="myIcon_active_control" d="M3 0 L0 3 L28 31 L31 28 Z M0 28 L3 31 L31 3 L28 0 Z"></path></svg></td><td id="myIcon_volume"><svg viewBox="0 0 31 31" preserveAspectRatio="none" class="myIcon"><defs><linearGradient id="volumeState"><stop class="myIcon_active_control myIcon_vcpos" offset="75%"></stop><stop class="myIcon_inactive_control myIcon_vcpos" offset="75%"></stop></linearGradient></defs><path d="M0 31 L31 31 L31 0 Z" fill="url(#volumeState)"></path></svg></td><td id="myIcon_fs_inactive"><svg viewBox="0 0 31 31" class="myIcon myIcon_active_control"><path d="M0 0 l0 12 l3 0 l0 -6 l8 8 l3 -3 l-8 -8 l6 0 l0 -3 Z M0 19 l0 12 l12 0 l0 -3 l-6 0 l8 -8 l-3 -3 l-8 8 l0 -6 Z M31 0 l-12 0 l0 3 l6 0 l-8 8 l3 3 l8 -8 l0 6 l3 0 Z M31 31 l0 -12 l-3 0 l0 6 l-8 -8 l-3 3 l8 8 l-6 0 l0 3 Z"></path></svg></td><td id="myIcon_fs_active"><svg viewBox="0 0 31 31" class="myIcon myIcon_active_control"><path d="M13 13 l0 -12 l-3 0 l0 6 l-7 -7 l-3 3 l7 7 l-6 0 l0 3 ZM18 13 l12 0 l0 -3 l-6 0 l7 -7 l-3 -3 l-7 7 l0 -6 l-3 0 Z M13 18 l-12 0 l0 3 l6 0 l-7 7 l3 3 l7 -7 l0 6 l3 0 Z M18 18 l0 12 l3 0 l0 -6 l7 7 l3 -3 l-7 -7 l6 0 l0 -3 Z"></path></svg></td></tr></tbody></table></div>';
+
+            // option 2: explicit drawing of elements.
+            titleDiv_ = owner.createElement('div');
+            titleDiv_.setAttribute('id', 'myIcon_title');
+            titleDiv_.setAttribute('class', 'myIcon_active_control');
+
+            skipDiv_ = owner.createElement('div');
+            skipDiv_.setAttribute('id', 'myIcon_skip');
+            skipDiv_.setAttribute('class', 'myIcon_skip_before myIcon_active_control');
+
+            close_ = owner.createElement('div');
+            close_.setAttribute('class', 'myIcon_active_control');
+            close_.setAttribute('id', 'myIcon_close');
+
+            closeSvg = owner.createElementNS( svgNS, 'svg' );
+            closeSvg.setAttributeNS(null, 'viewBox', '0 0 31 31');
+
+            closeSvgInner = owner.createElementNS( svgNS, 'path' );
+            closeSvgInner.setAttributeNS(null, 'd', 'M3 0 L0 3 L28 31 L31 28 Z M0 28 L3 31 L31 3 L28 0 Z' );
+            closeSvg.appendChild( closeSvgInner );
+            close_.appendChild( closeSvg );
+
+            // the table has an advantage here in that it can mix fixed width elements with variable width progress bar
+            // further, upon removal of a control element, the table collapses the remaining divs politely, all the while
+            // automatically placing the controls.
+            controlTable_ = owner.createElement( 'table' );
+            controlTable_.setAttribute('id', 'myIcon_controls');
+            controlBody_ = owner.createElement( 'tbody' );
+            controlTable_.appendChild( controlBody_ );
+
+            controlRow_ = owner.createElement( 'tr' );
+            controlBody_.appendChild( controlRow_ );
+
+            // play button!
+            play_ = owner.createElement( 'td' );
+            play_.setAttribute('id', 'myIcon_play');
+            playSvg_ = owner.createElementNS( svgNS, 'svg' );
+            playSvg_.setAttributeNS(null, 'viewBox', '0 0 31 31');
+            playSvg_.setAttributeNS(null, 'class', 'myIcon myIcon_active_control');
+            playSvgInner_ = owner.createElementNS( svgNS, 'path' );
+            playSvgInner_.setAttributeNS(null, 'd', 'M0 0 L0 31 L31 15.5 Z' );
+            playSvg_.appendChild( playSvgInner_ );
+            play_.appendChild( playSvg_ );
+
+            // pause button
+            pause_ = owner.createElement( 'td' );
+            pause_.style.display = 'none';
+            pause_.setAttribute('id', 'myIcon_pause');
+            pauseSvg_ = owner.createElementNS( svgNS, 'svg' );
+            pauseSvg_.setAttributeNS(null, 'viewBox', '0 0 31 31');
+            pauseSvg_.setAttributeNS(null, 'class', 'myIcon myIcon_active_control');
+            pauseSvgInner_ = owner.createElementNS( svgNS, 'path' );
+            pauseSvgInner_.setAttributeNS(null, 'd', 'M2 2 L2 29 L11 29 L11 2 Z M20 2 L20 29 L29 29 L29 2 Z' );
+            pauseSvg_.appendChild( pauseSvgInner_ );
+            pause_.appendChild( pauseSvg_ );
+
+            // show some divs that auto size and cover a percentage of their widths for
+            // play position as well as loaded position.
+            progress_ = owner.createElement( 'td' );
+            progress_.setAttribute('class', 'myIcon_progress');
+            progressBack_ = owner.createElement( 'div' );
+            progressBack_.setAttribute('class', 'myIcon_progressBacking');
+            loaded_ = owner.createElement( 'div' );
+            loaded_.setAttribute('id', 'myIcon_loaded');
+            playpos_ = owner.createElement( 'div' );
+            playpos_.setAttribute('id', 'myIcon_playpos');
+            progressBack_.appendChild( loaded_ );
+            progressBack_.appendChild( playpos_ );
+            progress_.appendChild( progressBack_ );
+
+            // show the duration and the current time:
+            clock_ = owner.createElement( 'td' );
+            clock_.setAttribute('id', 'myIcon_clock');
+            // default value for debugging:
+            clock_.innerHTML = '00:00 / 00:00';
+
+
+            // draw a little speaker symbol with a little arc out one side
+            mute_ = owner.createElement( 'td' );
+            mute_.setAttribute('id', 'myIcon_mute');
+            muteSvg_ = owner.createElementNS( svgNS, 'svg' );
+            muteSvg_.setAttributeNS(null, 'viewBox', '0 0 31 31');
+            muteSvg_.setAttributeNS(null, 'class', 'myIcon myIcon_active_control');
+            muteSvgInner_ = owner.createElementNS( svgNS, 'path' );
+            muteSvgInner_.setAttributeNS(null, 'd', 'M0 9 L0 22 L9 22 L18 31 L18 0 L9 9 Z M23 8 A11 11 0 0 1 23 23 L26 26 A15.24 15.24 0 0 0 26 5 Z' );
+            muteSvg_.appendChild( muteSvgInner_ );
+            mute_.appendChild( muteSvg_ );
+
+            // draw an inactive speaker with an active "X" over the top of it.
+            muted_ = owner.createElement( 'td' );
+            muted_.style.display = 'none';
+            muted_.setAttribute('id', 'myIcon_muted');
+            mutedSvg_ = owner.createElementNS( svgNS, 'svg' );
+            mutedSvg_.setAttributeNS(null, 'viewBox', '0 0 31 31');
+            mutedSvg_.setAttributeNS(null, 'class', 'myIcon myIcon_active_control');
+            mutedSvgInner_ = owner.createElementNS( svgNS, 'path' );
+            mutedSvgInner_.setAttributeNS(null, 'd', 'M5 9 L5 22 L14 22 L23 31 L23 0 L14 9 Z' );
+            mutedSvgInner_.setAttributeNS(null, 'class', 'myIcon_inactive_control');
+            mutedSvgInnerX_ = owner.createElementNS( svgNS, 'path' );
+            mutedSvgInnerX_.setAttributeNS(null, 'class', 'myIcon_active_control');
+            mutedSvgInnerX_.setAttributeNS(null, 'd', 'M3 0 L0 3 L28 31 L31 28 Z M0 28 L3 31 L31 3 L28 0 Z' );
+            mutedSvg_.appendChild( mutedSvgInner_ );
+            mutedSvg_.appendChild( mutedSvgInnerX_ );
+            muted_.appendChild( mutedSvg_ );
+
+            // make a triangular volume control
+            volume_ = owner.createElement( 'td' );
+            volume_.setAttribute('id', 'myIcon_volume');
+            volumeSvg_ = owner.createElementNS( svgNS, 'svg' );
+            volumeSvg_.setAttributeNS(null, 'viewBox', '0 0 31 31');
+            volumeSvg_.setAttributeNS(null, 'preserveAspectRatio', 'none');
+            volumeSvg_.setAttributeNS(null, 'class', 'myIcon');
+
+            volumeSvgInner_ = owner.createElementNS( svgNS, 'path' );
+            volumeSvgInner_.setAttributeNS(null, 'd', 'M0 31 L31 31 L31 0 Z' );
+            volumeSvgInner_.setAttributeNS(null, 'fill', 'url(#volumeState)' );
+
+            volumeDefs_ = owner.createElementNS( svgNS, 'defs' );
+            volumeSvg_.appendChild( volumeDefs_ );
+
+            volumeGrad_ = owner.createElementNS( svgNS, 'linearGradient' );
+            volumeGrad_.setAttributeNS(null, 'id', 'volumeState' );
+
+            volumeGradStop1_ = owner.createElementNS( svgNS, 'stop' );
+            volumeGradStop1_.setAttributeNS(null, 'class', 'myIcon_active_control myIcon_vcpos' );
+            volumeGradStop2_ = owner.createElementNS( svgNS, 'stop' );
+            volumeGradStop2_.setAttributeNS(null, 'class', 'myIcon_inactive_control myIcon_vcpos' );
+
+            volumeGrad_.appendChild(volumeGradStop1_);
+            volumeGrad_.appendChild(volumeGradStop2_);
+            volumeDefs_.appendChild( volumeGrad_ );
+
+            volumeSvg_.appendChild( volumeSvgInner_ );
+            volume_.appendChild( volumeSvg_ );
+
+            // fullscreen control:
+            fsInactive_ = owner.createElement( 'td' );
+            fsInactive_.setAttribute('id', 'myIcon_fs_inactive');
+            fsInactiveSVG_ = owner.createElementNS( svgNS, 'svg' );
+            fsInactiveSVG_.setAttributeNS(null, 'viewBox', '0 0 31 31');
+            fsInactiveSVG_.setAttributeNS(null, 'class', 'myIcon myIcon_active_control');
+
+            fsInactiveInner_ = owner.createElementNS( svgNS, 'path' );
+            fsInactiveInner_.setAttributeNS(null, 'd', '\
+            M0 0 l0 12 l3 0 l0 -6 l8 8 l3 -3 l-8 -8 l6 0 l0 -3 Z \
+            M0 19 l0 12 l12 0 l0 -3 l-6 0 l8 -8 l-3 -3 l-8 8 l0 -6 Z\
+            M31 0 l-12 0 l0 3 l6 0 l-8 8 l3 3 l8 -8 l0 6 l3 0 Z\
+            M31 31 l0 -12 l-3 0 l0 6 l-8 -8 l-3 3 l8 8 l-6 0 l0 3 Z' );
+            fsInactiveSVG_.appendChild( fsInactiveInner_);
+            fsInactive_.appendChild( fsInactiveSVG_ );
+
+            fsActive_ = owner.createElement( 'td' );
+            fsActive_.style.display = 'none';
+            fsActive_.setAttribute('id', 'myIcon_fs_active');
+            fsActiveSVG_ = owner.createElementNS( svgNS, 'svg' );
+            fsActiveSVG_.setAttributeNS(null, 'viewBox', '0 0 31 31');
+            fsActiveSVG_.setAttributeNS(null, 'class', 'myIcon myIcon_active_control');
+
+            fsActiveInner_ = owner.createElementNS( svgNS, 'path' );
+            fsActiveInner_.setAttributeNS(null, 'd', '\
+            M13 13 l0 -12 l-3 0 l0 6 l-7 -7 l-3 3 l7 7 l-6 0 l0 3 Z\
+            M18 13 l12 0 l0 -3 l-6 0 l7 -7 l-3 -3 l-7 7 l0 -6 l-3 0 Z\
+            M13 18 l-12 0 l0 3 l6 0 l-7 7 l3 3 l7 -7 l0 6 l3 0 Z\
+            M18 18 l0 12 l3 0 l0 -6 l7 7 l3 -3 l-7 -7 l6 0 l0 -3 Z');
+            fsActiveSVG_.appendChild( fsActiveInner_ );
+            fsActive_.appendChild( fsActiveSVG_ );
+
+            // decide what to display based on the 'instance' object.
+            controlFlag_ = false;
+            if( instance.controls.play ){
+                controlFlag_ = true;
+                controlRow_.appendChild( play_ );
+                controlRow_.appendChild( pause_ );
+            }
+            if( instance.controls.progress ){
+                controlFlag_ = true;
+                controlRow_.appendChild( progress_ );
+                controlRow_.appendChild( clock_ );
+            }
+            if( instance.controls.mute ){
+                controlFlag_ = true;
+                controlRow_.appendChild( mute_ );
+                controlRow_.appendChild( muted_ );
+            }
+            if( instance.controls.volume ){
+                controlFlag_ = true;
+                controlRow_.appendChild( volume_ );
+            }
+            if( instance.controls.fullscreen ){
+                controlFlag_ = true;
+                controlRow_.appendChild( fsInactive_ );
+                controlRow_.appendChild( fsActive_ );
+            }
+            hudElement.appendChild(titleDiv_);
+            if( instance.skippable ){
+                hudElement.appendChild(skipDiv_);
+            }
+            if( instance.controls.cancel ){
+                hudElement.appendChild(close_);
+            }
+            if( controlFlag_ ) hudElement.appendChild( controlTable_ );
+
+            play = new CustomEvent('play');
+            pause = new CustomEvent('pause');
+            close = new CustomEvent('close');
+            mute = new CustomEvent('mute');
+            unmute = new CustomEvent('unmute');
+            fullscreen = new CustomEvent('fullscreen');
+
+            this.play = ( function(){
+                var playing = false;
+                return function( evt ){
+                    // keep from firing the click emulation on touch devices:
+                    evt.preventDefault();
+                    if( !playing ){
+                        playing = true;
+                        play_.style.display = 'none';
+                        pause_.style.display = '';
+                        target.dispatchEvent( play );
+                    }
+                    else{
+                        playing = false;
+                        pause_.style.display = 'none';
+                        play_.style.display = '';
+                        target.dispatchEvent( pause );
+                    }
+                }
+            } )();
+            this.mute = ( function(){
+                var muted = false;
+                return function( evt ){
+                    evt.preventDefault();
+                    if( !muted ){
+                        muted = true;
+                        mute_.style.display = 'none';
+                        muted_.style.display = '';
+                        target.dispatchEvent( mute );
+                    }
+                    else{
+                        muted = false;
+                        muted_.style.display = 'none';
+                        mute_.style.display = '';
+                        target.dispatchEvent( unmute );
+                    }
+                }
+            } )();
+            this.volume = ( function(){
+                var rect = { left: 0, width: 1 };
+                var percent = 0;
+                var percentTxt = '';
+                return function( evt ){
+                    if( evt.buttons === 1 || evt.type === 'click' ){
+                        rect = volume_.getBoundingClientRect();
+                        percentTxt = ( ( evt.clientX - rect.left )/ rect.width ) * 100 + '%' ;
+                        volumeGradStop1_.setAttributeNS(null, 'offset', percentTxt);
+                        volumeGradStop2_.setAttributeNS(null, 'offset', percentTxt);
+                    }
+
+                };
+            } )();
+            this.progress = ( function(){
+                var rect = { left: 0, width: 1 };
+                var percent = 0;
+                var percentTxt = '';
+                return function( evt ){
+                    if( evt.buttons === 1 || evt.type === 'click' ){
+                        rect = progress_.getBoundingClientRect();
+                        percentTxt = ( ( evt.clientX - rect.left )/ rect.width ) * 100 + '%' ;
+                        loaded_.style.width = percentTxt;
+                        playpos_.style.width = percentTxt;
+                    }
+                };
+            } )();
+            this.fullscreen = ( function(){
+                var fullscreen = false;
+                return function(){
+                    if( !fullscreen ){
+                        fullscreen = true;
+                        fsInactive_.style.display = 'none';
+                        fsActive_.style.display = '';
+                    }
+                    else{
+                        fullscreen = false;
+                        fsActive_.style.display = 'none';
+                        fsInactive_.style.display = '';
+                    }
+                }
+            } )();
+
+            this.title = function (str) {
+                if (str) titleDiv_.innerHTML = str;
+                else if (instance.adTitle) {
+                    if (instance.adTitle.length > 0) titleDiv_.innerHTML = '"' + instance.adTitle + '"';
+                }
+                else {
+                    titleDiv_.style.display = 'none';
+                }
+            };
+            this.skipRemaining = function (num) {
+                if (instance.skipTextBefore) {
+                    skipDiv_.innerText = instance.skipTextBefore + ' ' + num + ' s';
+                }
+                else {
+                    skipDiv_.innerText = num + ' s';
+                }
+            };
+            this.skipTextAfter = function () {
+                if (instance.skipTextAfter) {
+                    if (instance.skipTextAfter.length > 0) {
+                        skipDiv_.innerText = instance.skipTextAfter;
+                    }
+                }
+                else {
+                    skipDiv_.style.display = 'none';
+                }
+            };
+            this.play = ( function(){
+                var playing = false;
+                return function(){
+                    if( !playing ){
+                        playing = true;
+                        play_.style.display = 'none';
+                        pause_.style.display = '';
+                        target.dispatchEvent( play );
+                    }
+                    else{
+                        playing = false;
+                        pause_.style.display = 'none';
+                        play_.style.display = '';
+                        target.dispatchEvent( pause );
+                    }
+                }
+            } )();
+
+            // this is the method to hide the controls when the ad is playing, but show when moving mouse over it
+            this.showHud = (function () {
+                var hudVisible = false;
+                var hideTimer;
+                function hide() {
+                    hudVisible = false;
+                    hudElement.setAttribute('class', 'myIcon_invisible');
+                }
+                function show() {
+                    hudVisible = true;
+                    hudElement.setAttribute('class', '');
+                }
+                function timer() {
+                    return setTimeout(hide, 1000);
+                }
+                return function () {
+                    if (!hudVisible) {
+                        show();
+                        hideTimer = timer();
+                    }
+                    else {
+                        clearTimeout(hideTimer);
+                        hideTimer = timer();
+                    }
+                };
+            })();
+            hudElement.addEventListener('click', this.showHud );
+            hudElement.addEventListener('mousemove', this.showHud );
+            hudElement.addEventListener('touchstart', this.showHud );
+
+            play_.addEventListener('click', this.play );
+            play_.addEventListener('touchstart', this.play );
+            pause_.addEventListener('click', this.play );
+            pause_.addEventListener('touchstart', this.play );
+            mute_.addEventListener('click', this.mute );
+            mute_.addEventListener('touchstart', this.mute );
+            muted_.addEventListener('click', this.mute );
+            muted_.addEventListener('touchstart', this.mute );
+            progress_.addEventListener('click', this.progress );
+            progress_.addEventListener('mousemove', this.progress );
+            progress_.addEventListener('touchmove', this.progress );
+            volume_.addEventListener('click', this.volume );
+            volume_.addEventListener('mousemove', this.volume );
+            fsActive_.addEventListener('click', this.fullscreen );
+            fsInactive_.addEventListener('click', this.fullscreen );
+
+            // initial conditions:
+            this.title();
+            this.skipRemaining( instance.skipTime );
+
+            // here is where we attach the display to the target
+            target.appendChild( hudElement );
+            return this;
+        };
+
+        // actual use of the display in the application:
+        var hud = new makeHud( vid1, instance );
+    }
+
+    var stateCheck = setInterval(function () {
+        if (document.readyState === 'complete') {
+            clearInterval(stateCheck);
+            myApplication();
+        }
+    }, 100);
+</script>
+</body>
+</html>
