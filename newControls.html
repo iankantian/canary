@@ -174,7 +174,7 @@
 
 <div id="myIcon_videoWrapper">
     <video width="100%" height="500px" poster="media/bunny_poster.jpg">
-        <source src="media/small.mp4" type="video/mp4">Stop using IE8!</video>
+        <source src="media/bigbuckbunny.mp4" type="video/mp4">Stop using IE8!</video>
 </div>
 
 
@@ -277,8 +277,8 @@
             progress_ = owner.createElement( 'td' );
             progress_.setAttribute('class', 'myIcon_progress');
             progress_.innerHTML = '<div class="myIcon_progressBacking"><div id="myIcon_loaded"></div><div id="myIcon_playpos"></div></div>';
-            playpos_ = progress_.children[ 0 ].children[ 0 ];
-            loaded_ = progress_.children[ 0 ].children[ 1 ];
+            playpos_ = progress_.children[ 0 ].children[ 1 ];
+            loaded_ = progress_.children[ 0 ].children[ 0 ];
 
             // show the duration and the current time:
             clock_ = owner.createElement( 'td' );
@@ -426,12 +426,28 @@
                         duration.min = Math.floor( duration.val / 60);
                         if( duration.min < 10 ){ duration.min = '0' + duration.min.toString(); }
                         if( duration.sec < 10 ){ duration.sec = '0' + duration.sec.toString(); }
-                        console.log( duration );
                         rect = progress_.getBoundingClientRect();
                         percentTxt = ( currentTime.val / duration.val ) * 100 + '%' ;
-                        loaded_.style.width = percentTxt;
                         playpos_.style.width = percentTxt;
                         clock_.innerHTML = currentTime.min + ':' + currentTime.sec + ' / ' + duration.min + ':' + duration.sec;
+                    }
+                };
+            } )();
+            this.loaded = ( function(){
+                var currentTime = 0;
+                var section = 0;
+                var buffObj = {};
+                return function( evt ){
+                    if( evt.type === 'progress' ){
+                        currentTime = evt.target.currentTime;
+                        section = 0;
+                        buffObj = evt.target.buffered;
+                        while( !( buffObj.start( section ) <= currentTime && currentTime <= buffObj.end( section ) ) ) {
+                            section++;
+                        }
+                        var loadEndPercentage = buffObj.end( section ) / evt.target.duration * 100;
+                        loaded_.style.width = loadEndPercentage + '%';
+                        console.log('prog', loaded_.style.width);
                     }
                 };
             } )();
@@ -441,7 +457,6 @@
                 target.dispatchEvent( fullScreen );
             };
             this.fullscreenExternalUpdate = function( evt ){
-                console.log( 'evt.type is', evt.type, 'and instance.isfullscreen is', instance.isfullscreen);
                 if( evt.type === 'myIcon_enterFs' ){
                     fsInactive_.style.display = 'none';
                     fsActive_.style.display = '';
@@ -511,6 +526,7 @@
             hudElement.addEventListener('touchstart', this.showHud );
 
             video.addEventListener('timeupdate', this.progress );
+            video.addEventListener('progress', this.loaded );
 
             play_.addEventListener('click', this.play );
             play_.addEventListener('touchstart', this.play );
